@@ -3,45 +3,36 @@ package com.example.bigtiz
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.bigtiz.ui.theme.BigTizTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             BigTizTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                DrawSurface()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun DrawSurface() {
+    Surface(
+        modifier = Modifier.fillMaxSize() //заставляет Surface занять всю доступную ширину и высоту экрана
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    BigTizTheme {
-        Greeting("Android")
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.wp6),
+            contentDescription = "", //описание фона
+            contentScale = androidx.compose.ui.layout.ContentScale.Crop //Crop увеличивает изображение, чтобы полность покрывало экран
+        )
     }
 }
