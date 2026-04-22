@@ -1,6 +1,9 @@
 package com.example.bigtiz
+
+import kotlinx.serialization.encodeToString
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -48,6 +51,8 @@ import androidx.compose.ui.unit.sp
 import kotlin.collections.listOf
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import java.io.File
+import java.util.Dictionary
 
 var money by mutableStateOf(10000)
 val FanZonePrice : Int = 100
@@ -68,18 +73,29 @@ val jsonConfig = Json {
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val jsonString = assets.open("DataBase.json").bufferedReader().readText()
+        val dataFile = File(filesDir, "DataBase.json")
+        if (!dataFile.exists()) {
+            assets.open("DataBase.json").use { input ->
+                dataFile.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+        }
+
+        val jsonString  = dataFile.readText()
         val ticket = jsonConfig.decodeFromString<Tickets>(jsonString)
+        var dictionary = mutableMapOf<String, Int>()
+
         enableEdgeToEdge()
         setContent {
             DrawSurface()
-            ColumnsOfOvals(ticket)
+            ColumnsOfOvals(ticket, dataFile)
         }
     }
 }
 
 @Composable
-fun ColumnsOfOvals(tickets: Tickets) : Unit {
+fun ColumnsOfOvals(tickets: Tickets, file: File) : Unit {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
@@ -93,17 +109,19 @@ fun ColumnsOfOvals(tickets: Tickets) : Unit {
             )
 
             Column(
-                modifier = Modifier.padding(vertical = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(15.dp)
+                modifier = Modifier
+                    .padding(vertical = 20.dp),
+                verticalArrangement = Arrangement
+                    .spacedBy(15.dp)
             ) {
                 FanZone(tickets).DrawFanZone()
                 VipZone(tickets).DrawVipZone()
-                PremuimZone(tickets).DrawPremiumZone()
+                PremiumZone(tickets).DrawPremiumZone()
             }
 
             TotalMenu().DrawTotal()
 
-            PayButton().DrawPayButton()
+            PayButton().DrawPayButton(tickets, file)
         }
 }
 
@@ -139,7 +157,8 @@ class UpperOval {
                 .padding(horizontal = 20.dp),
         ) {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize(),
                 contentAlignment = androidx.compose.ui.Alignment.Center,
             ){
                 Text(
@@ -220,7 +239,16 @@ class OvalBelowUpper {
                 .height(60.dp)
                 .clip(RoundedCornerShape(50))
                 .background(Color.Gray.copy(alpha = 0.5f))
-        )
+        ){
+            Text(
+                text = "Australia???",
+                fontSize = 20.sp,
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(horizontal = 20.dp)
+            )
+
+        }
     }
 }
 
@@ -233,11 +261,14 @@ class FanZone {
         tickets = _tickets
     }
 
+    companion object {
+        var value by mutableStateOf(0)
+    }
+
 
     @Composable
     fun DrawFanZone() {
         var amountOfFanZone by remember { mutableStateOf(tickets.FanZone) }
-        var value by remember { mutableStateOf(0) }
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -408,6 +439,7 @@ class FanZone {
                             Button(
                                 onClick = {if (value < tickets.FanZone) {
                                     value += 1
+
                                     amountOfFanZone -= 1
                                     Total += FanZonePrice
                                 }
@@ -445,11 +477,13 @@ class VipZone {
         tickets = _tickets
 
     }
+    companion object {
+        var value by mutableStateOf(0)
+    }
 
 
     @Composable
     fun DrawVipZone() {
-        var value by remember { mutableStateOf(0) }
         var amountOfVipZone by remember { mutableStateOf(tickets.VipZone) }
         Box(
             modifier = Modifier
@@ -652,15 +686,18 @@ class VipZone {
 
 }
 
-class PremuimZone {
+class PremiumZone {
     val tickets : Tickets
     constructor(_tickets: Tickets) {
         tickets = _tickets
     }
 
+    companion object {
+        var valuePrem by  mutableStateOf(0)
+    }
+
     @Composable
-    fun DrawPremiumZone() {
-        var value by remember { mutableStateOf(0) }
+    fun DrawPremiumZone(){
         var amountOfPremuimZone by remember { mutableStateOf(tickets.PremiumZone) }
         Box(
             modifier = Modifier
@@ -769,10 +806,10 @@ class PremuimZone {
                             modifier = Modifier.size(25.dp).clip(RoundedCornerShape(100))
                         ) {
                             Button(
-                                onClick = {if (value != 0)
+                                onClick = {if (valuePrem != 0)
                                 {
                                     Total -= PremuimZonePrice
-                                    value -= 1
+                                    valuePrem -= 1
                                     amountOfPremuimZone += 1
                                 }
                                           },
@@ -799,11 +836,11 @@ class PremuimZone {
                                 .background(Color.Gray),
                         ) {
 
-                            if (value - 1 >= 0 || value == 0) {
-                                when (value) {
+                            if (valuePrem - 1 >= 0 || valuePrem == 0) {
+                                when (valuePrem) {
                                     in 0..9 ->
                                         Text(
-                                                text="$value",
+                                                text="$valuePrem",
                                                 fontSize = 20.sp,
                                                 textAlign = TextAlign.Center,
                                                 modifier = Modifier
@@ -814,7 +851,7 @@ class PremuimZone {
 
                                     in 10..99 ->
                                         Text(
-                                                text="$value",
+                                                text="$valuePrem",
                                                 fontSize = 20.sp,
                                                 textAlign = TextAlign.Center,
                                                 modifier = Modifier
@@ -825,7 +862,7 @@ class PremuimZone {
 
                                     in 100..999 ->
                                         Text(
-                                                text="$value",
+                                                text="$valuePrem",
                                                 fontSize = 20.sp,
                                                 textAlign = TextAlign.Center,
                                                 modifier = Modifier
@@ -844,10 +881,10 @@ class PremuimZone {
                             modifier = Modifier.size(25.dp).clip(RoundedCornerShape(100))
                         ) {
                             Button(
-                                onClick = {if (value < tickets.PremiumZone)
+                                onClick = {if (valuePrem < tickets.PremiumZone)
                                 {
                                     Total += PremuimZonePrice
-                                    value += 1
+                                    valuePrem += 1
                                     amountOfPremuimZone -= 1
                                 }
                                           },
@@ -881,7 +918,7 @@ class PremuimZone {
 
 class PayButton {
     @Composable
-    fun DrawPayButton() {
+    fun DrawPayButton(tickets: Tickets, file : File) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -900,6 +937,17 @@ class PayButton {
                     onClick = {
                         if (Total <= money) {
                             money -= Total
+                            tickets.PremiumZone -= PremiumZone.valuePrem
+                            tickets.VipZone -= VipZone.value
+                            tickets.FanZone -= FanZone.value
+
+                            val newjson = Json.encodeToString(tickets)
+                            file.writeText(newjson)
+                            FanZone.value = 0
+                            VipZone.value = 0
+                            PremiumZone.valuePrem = 0
+                            Total = 0
+
                         }
                     },
                     shape = RoundedCornerShape(20),
