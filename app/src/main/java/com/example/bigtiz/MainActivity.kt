@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -52,6 +53,8 @@ var money by mutableStateOf(10000)
 val FanZonePrice : Int = 100
 val VipZonePrice : Int = 1400
 val PremuimZonePrice : Int = 2500
+
+var Total by mutableStateOf(0)
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
@@ -331,6 +334,7 @@ class FanZone {
                                 onClick = {if (value != 0) {
                                     value -= 1
                                     amountOfFanZone += 1
+                                    Total -= FanZonePrice
                                 }
                                           },
                                 enabled = true,
@@ -405,6 +409,7 @@ class FanZone {
                                 onClick = {if (value < tickets.FanZone) {
                                     value += 1
                                     amountOfFanZone -= 1
+                                    Total += FanZonePrice
                                 }
                                           },
                                 enabled = true,
@@ -541,6 +546,7 @@ class VipZone {
                                 onClick = {if (value != 0) {
                                     value -= 1
                                     amountOfVipZone += 1
+                                    Total -= VipZonePrice
                                 }
                                           },
                                 enabled = true,
@@ -614,6 +620,7 @@ class VipZone {
                             Button(
                                 onClick = {if (value < tickets.VipZone)
                                 {
+                                    Total += VipZonePrice
                                     value += 1
                                     amountOfVipZone -= 1
                                 }
@@ -764,6 +771,7 @@ class PremuimZone {
                             Button(
                                 onClick = {if (value != 0)
                                 {
+                                    Total -= PremuimZonePrice
                                     value -= 1
                                     amountOfPremuimZone += 1
                                 }
@@ -838,6 +846,7 @@ class PremuimZone {
                             Button(
                                 onClick = {if (value < tickets.PremiumZone)
                                 {
+                                    Total += PremuimZonePrice
                                     value += 1
                                     amountOfPremuimZone -= 1
                                 }
@@ -874,19 +883,25 @@ class PayButton {
     @Composable
     fun DrawPayButton() {
         Box(
-            modifier = Modifier.fillMaxSize().padding(vertical = 40.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(vertical = 40.dp)
 
         ){
             Box(
                 modifier = Modifier
-                    .align(Alignment.Center)
+                    .align(Alignment.TopCenter)
                     .width(250.dp)
                     .height(130.dp)
                     .clip(RoundedCornerShape(20))
                     .background(Color.Magenta)
             ) {
                 Button(
-                    onClick = {},
+                    onClick = {
+                        if (Total <= money) {
+                            money -= Total
+                        }
+                    },
                     shape = RoundedCornerShape(20),
                     contentPadding = PaddingValues(0.dp),
                     modifier = Modifier.fillMaxSize(),
@@ -913,13 +928,26 @@ class TotalMenu {
                         Modifier
                                 .height(40.dp)
                                 .fillMaxWidth()
-                                .background(Color.Red),
 
         ){
             Box(
-                    modifier = Modifier.align(Alignment.TopEnd).size(40.dp).background(Color.Gray)
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .fillMaxHeight()
+                        .width(200.dp)
+                        .clip(RoundedCornerShape(20))
+                        .background(Color.Gray.copy(alpha = 0.7f))
 
-            )
+            ) {
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .padding(horizontal = 5.dp),
+                    text = "Total: $Total ₽ ",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }
