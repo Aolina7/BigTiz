@@ -73,7 +73,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             DrawSurface()
-            DrawPhotoAndDescription()
         }
     }
 }
@@ -186,70 +185,6 @@ class UpperOval {
     }
 }
 
-@Composable
-fun DrawPhotoAndDescription() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 120.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .height(250.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color.Gray.copy(alpha = 0.3f)),
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.diana),
-                contentDescription = "Фотография",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = androidx.compose.ui.layout.ContentScale.Crop
-            )
-        }
 
-        Spacer(modifier = Modifier.height(20.dp))
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        color = Color.Gray.copy(alpha = 0.7f),
-                        shape = RoundedCornerShape(12.dp)
-                    )
-                    .padding(16.dp)
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = "Диана",
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        style = TextStyle(
-                            brush = Brush.linearGradient(list)
-                        ),
-                        modifier = Modifier.padding(bottom = 8.dp)
-                            .fillMaxWidth(),
-                        textAlign = TextAlign.Center
-                    )
-
-                    Text(
-                        text = "В мире королевских гонок всегда было место смелым, но сезон 2025 года стал поистине историческим. На трассы Формулы-1 вышла 18-летняя российская гонщица Диана Мухаметзянова — первая женщина за последние 15 лет, получившая место основного пилота.",
-                        fontSize = 18.sp,
-                        color = Color.White.copy(alpha = 0.9f)
-                    )
-                }
-            }
-        }
-    }
-}
 
