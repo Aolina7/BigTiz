@@ -7,9 +7,12 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.expandHorizontally
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -74,6 +77,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             DrawSurface()
             DrawPhotoAndDescription()
+            DrawMenu()
         }
     }
 }
@@ -250,6 +254,25 @@ fun DrawPhotoAndDescription() {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun DrawMenu() {
+    Box(
+        modifier = Modifier.fillMaxSize()
+            .padding(start = 20.dp, top = 115.dp),
+    ) {
+        Box(
+
+            modifier = Modifier
+                .height(700.dp)
+                .background(
+                    color = Color.DarkGray.copy(0.9f),
+                    shape = RoundedCornerShape(15.dp)
+                )
+                .padding(80.dp)
+        )
     }
 }
 
