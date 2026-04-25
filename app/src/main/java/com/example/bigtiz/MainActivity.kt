@@ -261,6 +261,15 @@ fun DrawPhotoAndDescription() {
 @Composable
 fun DrawMenu() {
     Box(
+        modifier = Modifier
+            .padding(top = 100.dp)
+            .height(730.dp)
+            .width(1000.dp)
+            .background(
+                color = Color.Black.copy(0.6f),
+            )
+    )
+    Box(
         modifier = Modifier.fillMaxSize()
             .padding(start = 20.dp, top = 115.dp),
     ) {
