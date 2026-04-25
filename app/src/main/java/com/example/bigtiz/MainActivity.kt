@@ -57,6 +57,7 @@ import java.io.File
 import java.util.Dictionary
 import androidx.compose.foundation.layout.offset
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.layout.ContentScale
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -264,15 +265,61 @@ fun DrawMenu() {
             .padding(start = 20.dp, top = 115.dp),
     ) {
         Box(
-
             modifier = Modifier
                 .height(700.dp)
+                .width(180.dp)
                 .background(
                     color = Color.DarkGray.copy(0.9f),
                     shape = RoundedCornerShape(15.dp)
                 )
-                .padding(80.dp)
-        )
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize()
+                    .padding(start = 10.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.navigation_menu_diana),
+                    contentDescription = "диана",
+                    modifier = Modifier
+                        .size(160.dp)
+                        .clip(RoundedCornerShape(50.dp)),
+                    contentScale = ContentScale.Crop
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Image(
+                    painter = painterResource(id = R.drawable.navigation_menu_anita),
+                    contentDescription = "диана",
+                    modifier = Modifier
+                        .size(160.dp)
+                        .clip(RoundedCornerShape(50.dp)),
+                    contentScale = ContentScale.Crop
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Image(
+                    painter = painterResource(id = R.drawable.navigation_menu_alina),
+                    contentDescription = "диана",
+                    modifier = Modifier
+                        .size(160.dp)
+                        .clip(RoundedCornerShape(50.dp)),
+                    contentScale = ContentScale.Crop
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Image(
+                    painter = painterResource(id = R.drawable.navigation_menu_alexander),
+                    contentDescription = "диана",
+                    modifier = Modifier
+                        .size(160.dp)
+                        .clip(RoundedCornerShape(50.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+        }
     }
 }
 
