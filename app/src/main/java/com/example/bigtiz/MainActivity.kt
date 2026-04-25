@@ -1,21 +1,33 @@
 package com.example.bigtiz
 
+import kotlinx.serialization.encodeToString
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
@@ -23,7 +35,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -31,38 +45,57 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.bigtiz.ui.theme.BigTizTheme
+import kotlin.collections.listOf
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import java.io.File
+import java.util.Dictionary
 
-var money by mutableStateOf(1000)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            BigTizTheme {
-                DrawSurface()
-                UpperOval().DrawUpperOval()
+        val dataFile = File(filesDir, "DataBase.json")
+        if (!dataFile.exists()) {
+            assets.open("DataBase.json").use { input ->
+                dataFile.outputStream().use { output ->
+                    input.copyTo(output)
+                }
             }
+        }
+
+        val jsonString  = dataFile.readText()
+        var dictionary = mutableMapOf<String, Int>()
+
+        enableEdgeToEdge()
+        setContent {
+            DrawSurface()
+
         }
     }
 }
 
+var money by mutableStateOf(10000)
+// Данная функция создает поверхность и накладывает на нее фото
 @Composable
-fun DrawSurface() {
+fun DrawSurface() : Unit {
     Surface(
-        modifier = Modifier.fillMaxSize() //заставляет Surface занять всю доступную ширину и высоту экрана
+        modifier = Modifier.fillMaxSize()
 
     ) {
         Image(
             painter = painterResource(id = R.drawable.wp6),
-            contentDescription = "", //описание фона
-            contentScale = androidx.compose.ui.layout.ContentScale.Crop //Crop увеличивает изображение, чтобы полность покрывало экран
+            contentDescription = "",
+            contentScale = androidx.compose.ui.layout.ContentScale.Crop
         )
     }
+
+    UpperOval().DrawUpperOval();
 }
 
-//шапка экрана
+// Данная функция создает овал вверху с текстом "Бик Тиз"
 class UpperOval {
     @Composable
     fun DrawUpperOval() : Unit {
@@ -97,7 +130,7 @@ class UpperOval {
         }
     }
 
-    //контекстное меню
+    // Три полоски сверху на овале
     @Composable
     fun DrawHamburgerMenu() : Unit {
         Box(
@@ -116,7 +149,7 @@ class UpperOval {
         MoneyIcon()
     }
 
-    //деньги
+    // Иконка денег
     @Composable
     fun MoneyIcon() : Unit {
         Box(
@@ -131,12 +164,12 @@ class UpperOval {
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
                 verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.rubblik),
-                    contentDescription = "Сумма на счету",
-                    modifier = Modifier.size(40.dp),
-                    contentScale = androidx.compose.ui.layout.ContentScale.Crop
-
+                Icon(painter = painterResource(R.drawable.rubblik),
+                    contentDescription = "Создает рубль",
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(100))
+                        .size(20.dp)
+                        .background(Color.Gray)
                 )
                 Text(
                     text = "$money",
@@ -151,3 +184,5 @@ class UpperOval {
         }
     }
 }
+
+
