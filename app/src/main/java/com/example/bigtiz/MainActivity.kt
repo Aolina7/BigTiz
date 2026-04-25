@@ -185,6 +185,34 @@ class UpperOval {
     }
 }
 
+@Composable
+fun DrawPhotoAndDescription() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 120.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+                .height(250.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color.Gray.copy(alpha = 0.3f)),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.diana),
+                contentDescription = "Фотография",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = androidx.compose.ui.layout.ContentScale.Crop
+            )
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+    }
+}
+
 
 
 
