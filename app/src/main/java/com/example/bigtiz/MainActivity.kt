@@ -37,7 +37,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -53,6 +52,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.util.Dictionary
+import androidx.compose.foundation.layout.offset
+import androidx.compose.ui.Alignment
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,12 +73,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             DrawSurface()
-
+            DrawPhotoAndDescription()
         }
     }
 }
 
 var money by mutableStateOf(10000)
+val list = listOf(Color.Gray, Color.Gray, Color.White)
 // Данная функция создает поверхность и накладывает на нее фото
 @Composable
 fun DrawSurface() : Unit {
@@ -99,7 +101,6 @@ fun DrawSurface() : Unit {
 class UpperOval {
     @Composable
     fun DrawUpperOval() : Unit {
-        val list = listOf(Color.Gray, Color.Gray, Color.White)
         Box(
             modifier = Modifier
                 .padding(vertical = 25.dp)
@@ -185,4 +186,70 @@ class UpperOval {
     }
 }
 
+@Composable
+fun DrawPhotoAndDescription() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 120.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+                .height(250.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color.Gray.copy(alpha = 0.3f)),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.diana),
+                contentDescription = "Фотография",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = androidx.compose.ui.layout.ContentScale.Crop
+            )
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = Color.Gray.copy(alpha = 0.7f),
+                        shape = RoundedCornerShape(12.dp)
+                    )
+                    .padding(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Диана",
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        style = TextStyle(
+                            brush = Brush.linearGradient(list)
+                        ),
+                        modifier = Modifier.padding(bottom = 8.dp)
+                            .fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+
+                    Text(
+                        text = "В мире королевских гонок всегда было место смелым, но сезон 2025 года стал поистине историческим. На трассы Формулы-1 вышла 18-летняя российская гонщица Диана Мухаметзянова — первая женщина за последние 15 лет, получившая место основного пилота.",
+                        fontSize = 18.sp,
+                        color = Color.White.copy(alpha = 0.9f)
+                    )
+                }
+            }
+        }
+    }
+}
 
