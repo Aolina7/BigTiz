@@ -290,7 +290,7 @@ fun DrawMenu() {
 
                 Image(
                     painter = painterResource(id = R.drawable.navigation_menu_anita),
-                    contentDescription = "диана",
+                    contentDescription = "анита",
                     modifier = Modifier
                         .size(160.dp)
                         .clip(RoundedCornerShape(50.dp)),
@@ -301,7 +301,7 @@ fun DrawMenu() {
 
                 Image(
                     painter = painterResource(id = R.drawable.navigation_menu_alina),
-                    contentDescription = "диана",
+                    contentDescription = "алина",
                     modifier = Modifier
                         .size(160.dp)
                         .clip(RoundedCornerShape(50.dp)),
@@ -312,7 +312,7 @@ fun DrawMenu() {
 
                 Image(
                     painter = painterResource(id = R.drawable.navigation_menu_alexander),
-                    contentDescription = "диана",
+                    contentDescription = "александр",
                     modifier = Modifier
                         .size(160.dp)
                         .clip(RoundedCornerShape(50.dp)),
