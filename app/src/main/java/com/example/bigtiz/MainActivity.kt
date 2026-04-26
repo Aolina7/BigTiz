@@ -286,47 +286,88 @@ fun DrawMenu() {
                 modifier = Modifier.fillMaxSize()
                     .padding(start = 10.dp)
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.navigation_menu_diana),
-                    contentDescription = "диана",
+                Spacer(modifier = Modifier.height(3.dp))
+
+                Button(
+                    onClick = {println("переход на биографию дианы")},
                     modifier = Modifier
-                        .size(160.dp)
-                        .clip(RoundedCornerShape(50.dp)),
-                    contentScale = ContentScale.Crop
-                )
+                        .size(160.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.White
+                    ),
+                    contentPadding = PaddingValues(0.dp),
+                    shape = RoundedCornerShape(50.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.navigation_menu_diana),
+                        contentDescription = "диана",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = {println("переход на биографию аниты")},
+                    modifier = Modifier
+                        .size(160.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.White
+                    ),
+                    contentPadding = PaddingValues(0.dp),
+                    shape = RoundedCornerShape(50.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.navigation_menu_anita),
+                        contentDescription = "анита",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Image(
-                    painter = painterResource(id = R.drawable.navigation_menu_anita),
-                    contentDescription = "анита",
+                Button(
+                    onClick = {println("переход на биографию алины")},
                     modifier = Modifier
-                        .size(160.dp)
-                        .clip(RoundedCornerShape(50.dp)),
-                    contentScale = ContentScale.Crop
-                )
+                        .size(160.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.White
+                    ),
+                    contentPadding = PaddingValues(0.dp),
+                    shape = RoundedCornerShape(50.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.navigation_menu_alina),
+                        contentDescription = "алина",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Image(
-                    painter = painterResource(id = R.drawable.navigation_menu_alina),
-                    contentDescription = "алина",
+                Button(
+                    onClick = {println("переход на биографию александра")},
                     modifier = Modifier
-                        .size(160.dp)
-                        .clip(RoundedCornerShape(50.dp)),
-                    contentScale = ContentScale.Crop
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Image(
-                    painter = painterResource(id = R.drawable.navigation_menu_alexander),
-                    contentDescription = "александр",
-                    modifier = Modifier
-                        .size(160.dp)
-                        .clip(RoundedCornerShape(50.dp)),
-                    contentScale = ContentScale.Crop
-                )
+                        .size(160.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.White
+                    ),
+                    contentPadding = PaddingValues(0.dp),
+                    shape = RoundedCornerShape(50.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.navigation_menu_alexander),
+                        contentDescription = "александр",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(10.dp))
 
