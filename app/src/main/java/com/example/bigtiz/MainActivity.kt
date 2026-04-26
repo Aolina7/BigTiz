@@ -1,9 +1,7 @@
 package com.example.bigtiz
 
-import kotlinx.serialization.encodeToString
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -34,6 +32,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -42,38 +41,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlin.collections.listOf
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
-import java.util.Dictionary
 
 var money by mutableStateOf(10000)
-val FanZonePrice : Int = 100
-val VipZonePrice : Int = 1400
-val PremuimZonePrice : Int = 2500
+val FanZonePrice: Int = 100
+val VipZonePrice: Int = 1400
+val PremuimZonePrice: Int = 2500
 
 var Total by mutableStateOf(0)
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
-data class Tickets(var FanZone : Int, var PremiumZone : Int, var VipZone : Int)
+data class Tickets(var FanZone: Int, var PremiumZone: Int, var VipZone: Int)
+
 val jsonConfig = Json {
     ignoreUnknownKeys = true
     coerceInputValues = true
 }
 
-
+//ctrl+alt+L - сделать красиво код
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val dataFile = File(filesDir, "DataBase.json")
+        val dataFile =
+            File(filesDir, "DataBase.json") //todo лишнее . лучше просто в константе хранить данные
         if (!dataFile.exists()) {
             assets.open("DataBase.json").use { input ->
                 dataFile.outputStream().use { output ->
@@ -82,9 +83,9 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        val jsonString  = dataFile.readText()
+        val jsonString = dataFile.readText()
         val ticket = jsonConfig.decodeFromString<Tickets>(jsonString)
-        var dictionary = mutableMapOf<String, Int>()
+        var dictionary = mutableMapOf<String, Int>() //todo unused
 
         enableEdgeToEdge()
         setContent {
@@ -95,39 +96,42 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun ColumnsOfOvals(tickets: Tickets, file: File) : Unit {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column(verticalArrangement = Arrangement.spacedBy((-15).dp)) {
-                UpperOval().DrawUpperOval()
-                OvalBelowUpper().DrawOvalBelowUpper()
-            }
-            Spacer(
-                Modifier.height(20.dp)
-            )
-
-            Column(
-                modifier = Modifier
-                    .padding(vertical = 20.dp),
-                verticalArrangement = Arrangement
-                    .spacedBy(15.dp)
-            ) {
-                FanZone(tickets).DrawFanZone()
-                VipZone(tickets).DrawVipZone()
-                PremiumZone(tickets).DrawPremiumZone()
-            }
-
-            TotalMenu().DrawTotal()
-
-            PayButton().DrawPayButton(tickets, file)
+fun ColumnsOfOvals(
+    tickets: Tickets,
+    file: File
+) { //todo если ничего не возвращается, тип не пишется
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy((-15).dp)) { //todo отрицательный отступ?? + отступы должны соответствовать MaterialDesign (т.е делиться на 4) https://m2.material.io/design/layout/spacing-methods.html#baseline-grid
+            UpperOval().DrawUpperOval()
+            OvalBelowUpper().DrawOvalBelowUpper()
         }
+        Spacer(
+            Modifier.height(20.dp)
+        )
+
+        Column(
+            modifier = Modifier
+                .padding(vertical = 20.dp),
+            verticalArrangement = Arrangement
+                .spacedBy(15.dp)
+        ) {
+            FanZone(tickets).DrawFanZone()
+            VipZone(tickets).DrawVipZone()
+            PremiumZone(tickets).DrawPremiumZone()
+        }
+
+        TotalMenu().DrawTotal()
+
+        PayButton().DrawPayButton(tickets, file)
+    }
 }
 
 // Данная функция создает поверхность и накладывает на нее фото
 @Composable
-fun DrawSurface() : Unit {
+fun DrawSurface(): Unit {
     Surface(
         modifier = Modifier.fillMaxSize()
 
@@ -135,19 +139,21 @@ fun DrawSurface() : Unit {
         Image(
             painter = painterResource(id = R.drawable.wp6),
             contentDescription = "",
-            contentScale = androidx.compose.ui.layout.ContentScale.Crop
+            contentScale = ContentScale.Crop //todo добавить импорт
         )
     }
 }
 
 // Данная функция создает овал вверху с текстом "Бик Тиз"
+
+//todo отдельные классы для composable не пишутся - compose про функции
 class UpperOval {
     @Composable
-    fun DrawUpperOval() : Unit {
+    fun DrawUpperOval(): Unit {
         val list = listOf(Color.Gray, Color.Gray, Color.White)
         Box(
             modifier = Modifier
-                .padding(vertical = 25.dp)
+                .padding(vertical = 25.dp) //todo есть другой конструктор с 4мя параметрами на вход на каждую сторону
                 .padding(start = 5.dp)
                 .padding(end = 5.dp)
                 .fillMaxWidth()
@@ -159,8 +165,8 @@ class UpperOval {
             Box(
                 modifier = Modifier
                     .fillMaxSize(),
-                contentAlignment = androidx.compose.ui.Alignment.Center,
-            ){
+                contentAlignment = Alignment.Center, //todo лишний импорт
+            ) {
                 Text(
                     text = "Бик Тиз",
                     fontSize = 25.sp,
@@ -177,18 +183,20 @@ class UpperOval {
 
     // Три полоски сверху на овале
     @Composable
-    fun DrawHamburgerMenu() : Unit {
+    fun DrawHamburgerMenu(): Unit {
         Box(
             modifier = Modifier.size(30.dp, 56.dp)
         ) {
             IconButton(
-                onClick = {print("Тут окно 1")}, // ....
+                onClick = { print("Тут окно 1") }, // .... //todo точно коммент не нейронкой?))
                 modifier = Modifier.fillMaxSize()
             ) {
-                Icon(Icons.Default.Menu,
+                Icon(
+                    Icons.Default.Menu,
                     contentDescription = "Показать меню",
                     modifier = Modifier.fillMaxSize(),
-                    tint = Color.LightGray)
+                    tint = Color.LightGray
+                )
             }
         }
         MoneyIcon()
@@ -196,20 +204,21 @@ class UpperOval {
 
     // Иконка денег
     @Composable
-    fun MoneyIcon() : Unit {
+    fun MoneyIcon(): Unit {
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(start = 60.dp)
                 .padding(vertical = 20.dp),
-            contentAlignment = androidx.compose.ui.Alignment.TopEnd
+            contentAlignment = Alignment.TopEnd
         )
         {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(painter = painterResource(R.drawable.rubblik),
+                Icon(
+                    painter = painterResource(R.drawable.rubblik),
                     contentDescription = "Создает рубль",
                     modifier = Modifier
                         .clip(RoundedCornerShape(100))
@@ -239,7 +248,7 @@ class OvalBelowUpper {
                 .height(60.dp)
                 .clip(RoundedCornerShape(50))
                 .background(Color.Gray.copy(alpha = 0.5f))
-        ){
+        ) {
             Text(
                 text = "Australia???",
                 fontSize = 20.sp,
@@ -252,19 +261,17 @@ class OvalBelowUpper {
     }
 }
 
+object FanZoneValueHolder {
+    var value by mutableIntStateOf(0)
+}
 
-class FanZone {
+class FanZone(
+    val tickets: Tickets
+) {
 
-    val tickets : Tickets
-
-    constructor(_tickets: Tickets) {
-        tickets = _tickets
-    }
-
-    companion object {
+    companion object { //todo companion object обычно пишется в конце класса
         var value by mutableStateOf(0)
     }
-
 
     @Composable
     fun DrawFanZone() {
@@ -279,43 +286,44 @@ class FanZone {
             Row(
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(-10.dp)
 
-            ) {
+                ) {
                 Box(
                     contentAlignment = Alignment.TopStart,
                     modifier = Modifier
                         .size(160.dp, 100.dp)
-                ){
-                    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(-15.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize()
                     ) {
                         Text(
-                                modifier = Modifier
-                                        .padding(horizontal = 20.dp)
-                                        .padding(vertical = 25.dp),
-                                text="Fan Zone",
-                                fontSize = 25.sp,
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold
+                            modifier = Modifier
+                                .padding(horizontal = 20.dp)
+                                .padding(vertical = 25.dp),
+                            text = "Fan Zone",
+                            fontSize = 25.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
 
                         )
 
 
                         Text(
-                                text = "${amountOfFanZone} tickets left",
-                                modifier = Modifier
-                                        .padding(horizontal = 10.dp),
-                                fontSize = 20.sp,
-                                color = Color.Red
+                            text = "${amountOfFanZone} tickets left",
+                            modifier = Modifier
+                                .padding(horizontal = 10.dp),
+                            fontSize = 20.sp,
+                            color = Color.Red
                         )
 
                     }
 
                 }
                 Box(
-                    modifier = Modifier.height(100.dp).fillMaxWidth(),
+                    modifier = Modifier
+                        .height(100.dp)
+                        .fillMaxWidth(),
                     contentAlignment = Alignment.CenterStart
-
 
 
                 ) {
@@ -326,48 +334,50 @@ class FanZone {
                     ) {
                         Box(
                             modifier = Modifier
-                                .size(90.dp, 60.dp)
                                 .clip(RoundedCornerShape(percent = 50))
                                 .background(Color.Gray)
                                 .border(3.dp, Color.White, RoundedCornerShape(50))
                         ) {
-                            if (FanZonePrice.toString().length == 4) {
-                                Text(
-                                    text = "$FanZonePrice₽",
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(vertical = 15.dp)
-                                        .padding(horizontal = 10.dp),
-                                    fontSize = 23.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = Color.White
-                                )
+//                            if (FanZonePrice.toString().length == 4) {
+                            Text(
+                                text = "$FanZonePrice₽",
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(vertical = 15.dp)
+                                    .padding(horizontal = 10.dp),
+                                fontSize = 23.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Color.White
+                            )
 
-                            } else {
-                                Text(
-                                    text = "$FanZonePrice₽",
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(vertical = 15.dp)
-                                        .padding(horizontal = 16.dp),
-                                    fontSize = 23.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = Color.White
-                                )
-
-                            }
+//                            } else {
+//                                Text(
+//                                    text = "$FanZonePrice₽",
+//                                    modifier = Modifier
+//                                        .fillMaxSize()
+//                                        .padding(vertical = 15.dp)
+//                                        .padding(horizontal = 16.dp),
+//                                    fontSize = 23.sp,
+//                                    fontWeight = FontWeight.Medium,
+//                                    color = Color.White
+//                                )
+//
+//                            }
 
                         }
                         Box(
-                            modifier = Modifier.size(25.dp).clip(RoundedCornerShape(100))
+                            modifier = Modifier
+                                .size(25.dp)
+                                .clip(RoundedCornerShape(100))
                         ) {
                             Button(
-                                onClick = {if (value != 0) {
-                                    value -= 1
-                                    amountOfFanZone += 1
-                                    Total -= FanZonePrice
-                                }
-                                          },
+                                onClick = {
+                                    if (value != 0) {
+                                        value -= 1
+                                        amountOfFanZone += 1
+                                        Total -= FanZonePrice
+                                    }
+                                },
                                 enabled = true,
                                 modifier = Modifier.fillMaxSize(),
                                 colors = ButtonDefaults.buttonColors(Color.Gray),
@@ -396,35 +406,35 @@ class FanZone {
                                 when (value) {
                                     in 0..9 ->
                                         Text(
-                                                text="$value",
-                                                fontSize = 20.sp,
-                                                textAlign = TextAlign.Center,
-                                                modifier = Modifier
-                                                        .padding(horizontal = 20.dp)
-                                                        .padding(vertical = 10.dp),
-                                                fontWeight = FontWeight.Bold
+                                            text = "$value",
+                                            fontSize = 20.sp,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier
+                                                .padding(horizontal = 20.dp)
+                                                .padding(vertical = 10.dp),
+                                            fontWeight = FontWeight.Bold
                                         )
 
                                     in 10..99 ->
                                         Text(
-                                                text="$value",
-                                                fontSize = 20.sp,
-                                                textAlign = TextAlign.Center,
-                                                modifier = Modifier
-                                                        .padding(horizontal = 12.dp)
-                                                        .padding(vertical = 10.dp),
-                                                fontWeight = FontWeight.Bold
+                                            text = "$value",
+                                            fontSize = 20.sp,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier
+                                                .padding(horizontal = 12.dp)
+                                                .padding(vertical = 10.dp),
+                                            fontWeight = FontWeight.Bold
                                         )
 
                                     in 100..999 ->
                                         Text(
-                                                text="$value",
-                                                fontSize = 20.sp,
-                                                textAlign = TextAlign.Center,
-                                                modifier = Modifier
-                                                        .padding(horizontal = 6.dp)
-                                                        .padding(vertical = 10.dp),
-                                                fontWeight = FontWeight.Bold
+                                            text = "$value",
+                                            fontSize = 20.sp,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier
+                                                .padding(horizontal = 6.dp)
+                                                .padding(vertical = 10.dp),
+                                            fontWeight = FontWeight.Bold
                                         )
 
                                 }
@@ -434,16 +444,19 @@ class FanZone {
                         }
 
                         Box(
-                            modifier = Modifier.size(25.dp).clip(RoundedCornerShape(100))
+                            modifier = Modifier
+                                .size(25.dp)
+                                .clip(RoundedCornerShape(100))
                         ) {
                             Button(
-                                onClick = {if (value < tickets.FanZone) {
-                                    value += 1
+                                onClick = {
+                                    if (value < tickets.FanZone) {
+                                        value += 1
 
-                                    amountOfFanZone -= 1
-                                    Total += FanZonePrice
-                                }
-                                          },
+                                        amountOfFanZone -= 1
+                                        Total += FanZonePrice
+                                    }
+                                },
                                 enabled = true,
                                 modifier = Modifier.fillMaxSize(),
                                 colors = ButtonDefaults.buttonColors(Color.Gray),
@@ -460,7 +473,6 @@ class FanZone {
                         }
 
 
-
                     }
                 }
 
@@ -472,11 +484,13 @@ class FanZone {
 }
 
 class VipZone {
-    val tickets : Tickets
+    val tickets: Tickets
+
     constructor(_tickets: Tickets) {
         tickets = _tickets
 
     }
+
     companion object {
         var value by mutableStateOf(0)
     }
@@ -502,35 +516,38 @@ class VipZone {
                     contentAlignment = Alignment.TopStart,
                     modifier = Modifier
                         .size(160.dp, 100.dp)
-                ){
-                    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(-15.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(-15.dp)
                     ) {
                         Text(
-                                modifier = Modifier
-                                        .padding(horizontal = 20.dp)
-                                        .padding(vertical = 25.dp),
-                                text="Vip Zone",
-                                fontSize = 25.sp,
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold
+                            modifier = Modifier
+                                .padding(horizontal = 20.dp)
+                                .padding(vertical = 25.dp),
+                            text = "Vip Zone",
+                            fontSize = 25.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
 
                         )
 
 
                         Text(
-                                text = "${amountOfVipZone} tickets left",
-                                modifier = Modifier
-                                        .padding(horizontal = 10.dp),
-                                fontSize = 20.sp,
-                                color = Color.Red
+                            text = "${amountOfVipZone} tickets left",
+                            modifier = Modifier
+                                .padding(horizontal = 10.dp),
+                            fontSize = 20.sp,
+                            color = Color.Red
                         )
 
                     }
                 }
                 Box(
-                    modifier = Modifier.height(100.dp).fillMaxWidth(),
+                    modifier = Modifier
+                        .height(100.dp)
+                        .fillMaxWidth(),
                     contentAlignment = Alignment.CenterStart
-
 
 
                 ) {
@@ -574,15 +591,18 @@ class VipZone {
 
                         }
                         Box(
-                            modifier = Modifier.size(25.dp).clip(RoundedCornerShape(100))
+                            modifier = Modifier
+                                .size(25.dp)
+                                .clip(RoundedCornerShape(100))
                         ) {
                             Button(
-                                onClick = {if (value != 0) {
-                                    value -= 1
-                                    amountOfVipZone += 1
-                                    Total -= VipZonePrice
-                                }
-                                          },
+                                onClick = {
+                                    if (value != 0) {
+                                        value -= 1
+                                        amountOfVipZone += 1
+                                        Total -= VipZonePrice
+                                    }
+                                },
                                 enabled = true,
                                 modifier = Modifier.fillMaxSize(),
                                 colors = ButtonDefaults.buttonColors(Color.Gray),
@@ -600,10 +620,10 @@ class VipZone {
 
                         Box(
                             modifier = Modifier
-                                    .width(50.dp)
-                                    .height(45.dp)
-                                    .clip(RoundedCornerShape(100))
-                                    .background(Color.Gray),
+                                .width(50.dp)
+                                .height(45.dp)
+                                .clip(RoundedCornerShape(100))
+                                .background(Color.Gray),
                         ) {
 
                             if (value - 1 >= 0 || value == 0) {
@@ -611,35 +631,35 @@ class VipZone {
                                 when (value) {
                                     in 0..9 ->
                                         Text(
-                                                text="$value",
-                                                fontSize = 20.sp,
-                                                textAlign = TextAlign.Center,
-                                                modifier = Modifier
-                                                        .padding(horizontal = 20.dp)
-                                                        .padding(vertical = 10.dp),
-                                                fontWeight = FontWeight.Bold
+                                            text = "$value",
+                                            fontSize = 20.sp,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier
+                                                .padding(horizontal = 20.dp)
+                                                .padding(vertical = 10.dp),
+                                            fontWeight = FontWeight.Bold
                                         )
 
                                     in 10..99 ->
                                         Text(
-                                                text="$value",
-                                                fontSize = 20.sp,
-                                                textAlign = TextAlign.Center,
-                                                modifier = Modifier
-                                                        .padding(horizontal = 12.dp)
-                                                        .padding(vertical = 10.dp),
-                                                fontWeight = FontWeight.Bold
+                                            text = "$value",
+                                            fontSize = 20.sp,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier
+                                                .padding(horizontal = 12.dp)
+                                                .padding(vertical = 10.dp),
+                                            fontWeight = FontWeight.Bold
                                         )
 
                                     in 100..999 ->
                                         Text(
-                                                text="$value",
-                                                fontSize = 20.sp,
-                                                textAlign = TextAlign.Center,
-                                                modifier = Modifier
-                                                        .padding(horizontal = 6.dp)
-                                                        .padding(vertical = 10.dp),
-                                                fontWeight = FontWeight.Bold
+                                            text = "$value",
+                                            fontSize = 20.sp,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier
+                                                .padding(horizontal = 6.dp)
+                                                .padding(vertical = 10.dp),
+                                            fontWeight = FontWeight.Bold
                                         )
 
                                 }
@@ -649,16 +669,18 @@ class VipZone {
                         }
 
                         Box(
-                            modifier = Modifier.size(25.dp).clip(RoundedCornerShape(100))
+                            modifier = Modifier
+                                .size(25.dp)
+                                .clip(RoundedCornerShape(100))
                         ) {
                             Button(
-                                onClick = {if (value < tickets.VipZone)
-                                {
-                                    Total += VipZonePrice
-                                    value += 1
-                                    amountOfVipZone -= 1
-                                }
-                                          },
+                                onClick = {
+                                    if (value < tickets.VipZone) {
+                                        Total += VipZonePrice
+                                        value += 1
+                                        amountOfVipZone -= 1
+                                    }
+                                },
                                 enabled = true,
                                 modifier = Modifier.fillMaxSize(),
                                 colors = ButtonDefaults.buttonColors(Color.Gray),
@@ -675,7 +697,6 @@ class VipZone {
                         }
 
 
-
                     }
                 }
 
@@ -687,17 +708,18 @@ class VipZone {
 }
 
 class PremiumZone {
-    val tickets : Tickets
+    val tickets: Tickets
+
     constructor(_tickets: Tickets) {
         tickets = _tickets
     }
 
     companion object {
-        var valuePrem by  mutableStateOf(0)
+        var valuePrem by mutableStateOf(0)
     }
 
     @Composable
-    fun DrawPremiumZone(){
+    fun DrawPremiumZone() {
         var amountOfPremuimZone by remember { mutableStateOf(tickets.PremiumZone) }
         Box(
             modifier = Modifier
@@ -716,7 +738,7 @@ class PremiumZone {
                     contentAlignment = Alignment.TopStart,
                     modifier = Modifier
                         .size(160.dp, 100.dp)
-                ){
+                ) {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(-20.dp),
                         modifier = Modifier.fillMaxWidth()
@@ -725,7 +747,7 @@ class PremiumZone {
                             modifier = Modifier
                                 .padding(horizontal = 19.dp)
                                 .padding(vertical = 19.dp),
-                            text="Premium",
+                            text = "Premium",
                             fontSize = 25.sp,
                             color = Color.White,
                             fontWeight = FontWeight.Bold
@@ -735,7 +757,7 @@ class PremiumZone {
                         Text(
                             modifier = Modifier.padding(horizontal = 40.dp),
 
-                            text="Zone",
+                            text = "Zone",
                             fontSize = 20.sp,
                             color = Color.White,
                             fontWeight = FontWeight.Bold
@@ -745,22 +767,22 @@ class PremiumZone {
                         Spacer(modifier = Modifier.height(40.dp))
 
                         Text(
-                                text = "${amountOfPremuimZone} tickets left",
-                                modifier = Modifier
-                                        .padding(horizontal = 10.dp),
-                                fontSize = 20.sp,
-                                color = Color.Red
+                            text = "${amountOfPremuimZone} tickets left",
+                            modifier = Modifier
+                                .padding(horizontal = 10.dp),
+                            fontSize = 20.sp,
+                            color = Color.Red
                         )
-
 
 
                     }
 
                 }
                 Box(
-                    modifier = Modifier.height(100.dp).fillMaxWidth(),
+                    modifier = Modifier
+                        .height(100.dp)
+                        .fillMaxWidth(),
                     contentAlignment = Alignment.CenterStart
-
 
 
                 ) {
@@ -803,16 +825,18 @@ class PremiumZone {
                             }
                         }
                         Box(
-                            modifier = Modifier.size(25.dp).clip(RoundedCornerShape(100))
+                            modifier = Modifier
+                                .size(25.dp)
+                                .clip(RoundedCornerShape(100))
                         ) {
                             Button(
-                                onClick = {if (valuePrem != 0)
-                                {
-                                    Total -= PremuimZonePrice
-                                    valuePrem -= 1
-                                    amountOfPremuimZone += 1
-                                }
-                                          },
+                                onClick = {
+                                    if (valuePrem != 0) {
+                                        Total -= PremuimZonePrice
+                                        valuePrem -= 1
+                                        amountOfPremuimZone += 1
+                                    }
+                                },
                                 enabled = true,
                                 modifier = Modifier.fillMaxSize(),
                                 colors = ButtonDefaults.buttonColors(Color.Gray),
@@ -840,35 +864,35 @@ class PremiumZone {
                                 when (valuePrem) {
                                     in 0..9 ->
                                         Text(
-                                                text="$valuePrem",
-                                                fontSize = 20.sp,
-                                                textAlign = TextAlign.Center,
-                                                modifier = Modifier
-                                                        .padding(horizontal = 20.dp)
-                                                        .padding(vertical = 10.dp),
-                                                fontWeight = FontWeight.Bold
+                                            text = "$valuePrem",
+                                            fontSize = 20.sp,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier
+                                                .padding(horizontal = 20.dp)
+                                                .padding(vertical = 10.dp),
+                                            fontWeight = FontWeight.Bold
                                         )
 
                                     in 10..99 ->
                                         Text(
-                                                text="$valuePrem",
-                                                fontSize = 20.sp,
-                                                textAlign = TextAlign.Center,
-                                                modifier = Modifier
-                                                        .padding(horizontal = 12.dp)
-                                                        .padding(vertical = 10.dp),
-                                                fontWeight = FontWeight.Bold
+                                            text = "$valuePrem",
+                                            fontSize = 20.sp,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier
+                                                .padding(horizontal = 12.dp)
+                                                .padding(vertical = 10.dp),
+                                            fontWeight = FontWeight.Bold
                                         )
 
                                     in 100..999 ->
                                         Text(
-                                                text="$valuePrem",
-                                                fontSize = 20.sp,
-                                                textAlign = TextAlign.Center,
-                                                modifier = Modifier
-                                                        .padding(horizontal = 6.dp)
-                                                        .padding(vertical = 10.dp),
-                                                fontWeight = FontWeight.Bold
+                                            text = "$valuePrem",
+                                            fontSize = 20.sp,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier
+                                                .padding(horizontal = 6.dp)
+                                                .padding(vertical = 10.dp),
+                                            fontWeight = FontWeight.Bold
                                         )
 
                                 }
@@ -878,16 +902,18 @@ class PremiumZone {
                         }
 
                         Box(
-                            modifier = Modifier.size(25.dp).clip(RoundedCornerShape(100))
+                            modifier = Modifier
+                                .size(25.dp)
+                                .clip(RoundedCornerShape(100))
                         ) {
                             Button(
-                                onClick = {if (valuePrem < tickets.PremiumZone)
-                                {
-                                    Total += PremuimZonePrice
-                                    valuePrem += 1
-                                    amountOfPremuimZone -= 1
-                                }
-                                          },
+                                onClick = {
+                                    if (valuePrem < tickets.PremiumZone) {
+                                        Total += PremuimZonePrice
+                                        valuePrem += 1
+                                        amountOfPremuimZone -= 1
+                                    }
+                                },
                                 enabled = true,
                                 modifier = Modifier.fillMaxSize(),
                                 colors = ButtonDefaults.buttonColors(Color.Gray),
@@ -904,7 +930,6 @@ class PremiumZone {
                         }
 
 
-
                     }
                 }
 
@@ -918,13 +943,13 @@ class PremiumZone {
 
 class PayButton {
     @Composable
-    fun DrawPayButton(tickets: Tickets, file : File) {
+    fun DrawPayButton(tickets: Tickets, file: File) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(vertical = 40.dp)
 
-        ){
+        ) {
             Box(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
@@ -971,20 +996,20 @@ class PayButton {
 class TotalMenu {
     @Composable
     fun DrawTotal() {
-        Box (
-                modifier =
-                        Modifier
-                                .height(40.dp)
-                                .fillMaxWidth()
+        Box(
+            modifier =
+                Modifier
+                    .height(40.dp)
+                    .fillMaxWidth()
 
-        ){
+        ) {
             Box(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .fillMaxHeight()
-                        .width(200.dp)
-                        .clip(RoundedCornerShape(20))
-                        .background(Color.Gray.copy(alpha = 0.7f))
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .fillMaxHeight()
+                    .width(200.dp)
+                    .clip(RoundedCornerShape(20))
+                    .background(Color.Gray.copy(alpha = 0.7f))
 
             ) {
                 Text(
