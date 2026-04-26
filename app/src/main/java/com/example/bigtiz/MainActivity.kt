@@ -263,7 +263,7 @@ fun DrawMenu() {
     Box(
         modifier = Modifier
             .padding(top = 100.dp)
-            .height(730.dp)
+            .height(745.dp)
             .width(1000.dp)
             .background(
                 color = Color.Black.copy(0.6f),
@@ -271,11 +271,11 @@ fun DrawMenu() {
     )
     Box(
         modifier = Modifier.fillMaxSize()
-            .padding(start = 20.dp, top = 115.dp),
+            .padding(start = 20.dp, top = 100.dp),
     ) {
         Box(
             modifier = Modifier
-                .height(700.dp)
+                .height(750.dp)
                 .width(180.dp)
                 .background(
                     color = Color.DarkGray.copy(0.9f),
@@ -327,6 +327,46 @@ fun DrawMenu() {
                         .clip(RoundedCornerShape(50.dp)),
                     contentScale = ContentScale.Crop
                 )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Button(
+                    onClick = { print("переход на главную страницу") },
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(50.dp))
+                        .height(40.dp)
+                        .width(160.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.LightGray.copy(alpha = 0.2f),
+                    ),
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.navigation_menu_home),
+                            contentDescription = "кнопка на главную",
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .width(40.dp),
+                            contentScale = ContentScale.Crop
+                        )
+
+                        Text(
+                            text = "вернуться на главную",
+                            fontSize = 13.sp,
+                            lineHeight = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.LightGray,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 3.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
             }
         }
     }
