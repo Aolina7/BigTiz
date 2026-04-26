@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -126,7 +127,7 @@ class UpperOval {
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = "Бик Тиз",
+                    text = stringResource(R.string.ticket_selection_bigtiz),
                     fontSize = 25.sp,
                     style = TextStyle(
                         brush = Brush.linearGradient(list),
@@ -286,7 +287,9 @@ class FanZone(private val tickets: Tickets) {
                                 )
                             }
                         }
-                        Box(modifier = Modifier.size(25.dp).clip(RoundedCornerShape(100))) {
+                        Box(modifier = Modifier
+                            .size(25.dp)
+                            .clip(RoundedCornerShape(100))) {
                             Button(
                                 onClick = {
                                     if (value != 0) {
@@ -352,7 +355,9 @@ class FanZone(private val tickets: Tickets) {
                             }
                         }
 
-                        Box(modifier = Modifier.size(25.dp).clip(RoundedCornerShape(100))) {
+                        Box(modifier = Modifier
+                            .size(25.dp)
+                            .clip(RoundedCornerShape(100))) {
                             Button(
                                 onClick = {
                                     if (value < tickets.FanZone) {
@@ -469,7 +474,9 @@ class VipZone(private val tickets: Tickets) {
                             }
                         }
 
-                        Box(modifier = Modifier.size(25.dp).clip(RoundedCornerShape(100))) {
+                        Box(modifier = Modifier
+                            .size(25.dp)
+                            .clip(RoundedCornerShape(100))) {
                             Button(
                                 onClick = {
                                     if (value != 0) {
@@ -535,7 +542,9 @@ class VipZone(private val tickets: Tickets) {
                             }
                         }
 
-                        Box(modifier = Modifier.size(25.dp).clip(RoundedCornerShape(100))) {
+                        Box(modifier = Modifier
+                            .size(25.dp)
+                            .clip(RoundedCornerShape(100))) {
                             Button(
                                 onClick = {
                                     if (value < tickets.VipZone) {
@@ -664,7 +673,9 @@ class PremiumZone(private val tickets: Tickets) {
                             }
                         }
 
-                        Box(modifier = Modifier.size(25.dp).clip(RoundedCornerShape(100))) {
+                        Box(modifier = Modifier
+                            .size(25.dp)
+                            .clip(RoundedCornerShape(100))) {
                             Button(
                                 onClick = {
                                     if (valuePrem != 0) {
@@ -730,7 +741,9 @@ class PremiumZone(private val tickets: Tickets) {
                             }
                         }
 
-                        Box(modifier = Modifier.size(25.dp).clip(RoundedCornerShape(100))) {
+                        Box(modifier = Modifier
+                            .size(25.dp)
+                            .clip(RoundedCornerShape(100))) {
                             Button(
                                 onClick = {
                                     if (valuePrem < tickets.PremiumZone) {
