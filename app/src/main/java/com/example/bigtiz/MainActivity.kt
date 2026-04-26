@@ -77,14 +77,25 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             DrawSurface()
-            DrawPhotoAndDescription()
-            DrawMenu()
+            DrawPhotoAndDescription(racer = RacersData.diana)
+            //DrawMenu()
         }
     }
 }
 
 var money by mutableStateOf(10000)
 val list = listOf(Color.Gray, Color.Gray, Color.White)
+
+fun String.toRacerDrawable(): Int {
+    return when (this.lowercase()) {
+        "diana" -> R.drawable.diana
+        "anita" -> R.drawable.anita
+        "alina" -> R.drawable.alina
+        "alexander" -> R.drawable.alexander
+        else -> R.drawable.diana
+    }
+}
+
 // Данная функция создает поверхность и накладывает на нее фото
 @Composable
 fun DrawSurface() : Unit {
@@ -192,7 +203,7 @@ class UpperOval {
 }
 
 @Composable
-fun DrawPhotoAndDescription() {
+fun DrawPhotoAndDescription(racer: Racer) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -208,10 +219,10 @@ fun DrawPhotoAndDescription() {
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(id = R.drawable.diana),
-                contentDescription = "Фотография",
+                painter = racer.painter,
+                contentDescription = "Фотография ${racer.name}",
                 modifier = Modifier.fillMaxSize(),
-                contentScale = androidx.compose.ui.layout.ContentScale.Crop
+                contentScale = ContentScale.Crop
             )
         }
 
@@ -235,7 +246,7 @@ fun DrawPhotoAndDescription() {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "Диана",
+                        text = "${racer.name}",
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
@@ -248,7 +259,7 @@ fun DrawPhotoAndDescription() {
                     )
 
                     Text(
-                        text = "В мире королевских гонок всегда было место смелым, но сезон 2025 года стал поистине историческим. На трассы Формулы-1 вышла 18-летняя российская гонщица Диана Мухаметзянова — первая женщина за последние 15 лет, получившая место основного пилота.",
+                        text = "${racer.fullDescription}",
                         fontSize = 18.sp,
                         color = Color.White.copy(alpha = 0.9f)
                     )
@@ -263,7 +274,7 @@ fun DrawMenu() {
     Box(
         modifier = Modifier
             .padding(top = 100.dp)
-            .height(745.dp)
+            .height(800.dp)
             .width(1000.dp)
             .background(
                 color = Color.Black.copy(0.6f),
