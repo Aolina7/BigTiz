@@ -29,8 +29,7 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            //TicketSelectionScreen(ticket, dataFile)
-            RaceInfoScreen()
+            TicketSelectionScreen(ticket, dataFile)
         }
     }
 }
