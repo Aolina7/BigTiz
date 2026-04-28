@@ -207,7 +207,8 @@ private fun PhotoAndDescription(racer: Racer) {
                         style = TextStyle(
                             brush = Brush.linearGradient(gradientList)
                         ),
-                        modifier = Modifier.padding(bottom = 8.dp)
+                        modifier = Modifier
+                            .padding(bottom = 8.dp)
                             .fillMaxWidth(),
                         textAlign = TextAlign.Center
                     )
@@ -223,9 +224,8 @@ private fun PhotoAndDescription(racer: Racer) {
     }
 }
 
-
 @Composable
-fun NavigationMenu(onClose: () -> Unit) {
+fun ScreenDimming() {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -233,9 +233,78 @@ fun NavigationMenu(onClose: () -> Unit) {
                 color = Color.Black.copy(0.6f),
             )
     )
+}
+
+@Composable
+fun PhotoAsButton(racer: Racer) {
+    Button(
+        onClick = {},
+        modifier = Modifier
+            .size(160.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Transparent,
+            contentColor = Color.White
+        ),
+        contentPadding = PaddingValues(0.dp),
+        shape = RoundedCornerShape(50.dp)
+    ) {
+        Image(
+            painter = racer.painter,
+            contentDescription = "$racer.name",
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+    }
+}
+
+@Composable
+fun ButtonGoHome() {
+    Button(
+        onClick = { print("переход на главную страницу") },
+        modifier = Modifier
+            .clip(RoundedCornerShape(50.dp))
+            .height(40.dp)
+            .width(160.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.LightGray.copy(alpha = 0.2f),
+        ),
+        contentPadding = PaddingValues(0.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.navigation_menu_home),
+                contentDescription = "кнопка на главную",
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(40.dp),
+                contentScale = ContentScale.Crop
+            )
+
+            Text(
+                text = "вернуться на главную",
+                fontSize = 13.sp,
+                lineHeight = 13.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.LightGray,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 4.dp),
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+@Composable
+fun NavigationMenu(onClose: () -> Unit) {
+    ScreenDimming()
     Box(
-        modifier = Modifier.fillMaxSize()
-            .padding(start = 20.dp, top = 90.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(start = 20.dp, top = 80.dp),
     ) {
         Box(
             modifier = Modifier
@@ -250,136 +319,28 @@ fun NavigationMenu(onClose: () -> Unit) {
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
             )
+
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
                     .padding(start = 8.dp)
             ) {
+
                 Spacer(modifier = Modifier.height(5.dp))
 
-                Button(
-                    onClick = {},
-                    modifier = Modifier
-                        .size(160.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = Color.White
-                    ),
-                    contentPadding = PaddingValues(0.dp),
-                    shape = RoundedCornerShape(50.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.navigation_menu_diana),
-                        contentDescription = "диана",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = {println("переход на биографию аниты")},
-                    modifier = Modifier
-                        .size(160.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = Color.White
-                    ),
-                    contentPadding = PaddingValues(0.dp),
-                    shape = RoundedCornerShape(50.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.navigation_menu_anita),
-                        contentDescription = "анита",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
+                for (racer in RacersData.allRacers) {
+                    PhotoAsButton(racer = racer)
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = {println("переход на биографию алины")},
-                    modifier = Modifier
-                        .size(160.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = Color.White
-                    ),
-                    contentPadding = PaddingValues(0.dp),
-                    shape = RoundedCornerShape(50.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.navigation_menu_alina),
-                        contentDescription = "алина",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = {println("переход на биографию александра")},
-                    modifier = Modifier
-                        .size(160.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = Color.White
-                    ),
-                    contentPadding = PaddingValues(0.dp),
-                    shape = RoundedCornerShape(50.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.navigation_menu_alexander),
-                        contentDescription = "александр",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Button(
-                    onClick = { print("переход на главную страницу") },
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(50.dp))
-                        .height(40.dp)
-                        .width(160.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.LightGray.copy(alpha = 0.2f),
-                    ),
-                    contentPadding = PaddingValues(0.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.navigation_menu_home),
-                            contentDescription = "кнопка на главную",
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .width(40.dp),
-                            contentScale = ContentScale.Crop
-                        )
-
-                        Text(
-                            text = "вернуться на главную",
-                            fontSize = 13.sp,
-                            lineHeight = 13.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.LightGray,
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(horizontal = 4.dp),
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
+                ButtonGoHome()
             }
         }
     }
 }
+
+
+
 
 
 
