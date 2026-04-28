@@ -14,7 +14,4 @@ data class Racer(
     val country: String,
     val wins: Int,
     val quote: String
-) {
-    val fullDescription: String
-        get() = "$fullName - $country\nВозраст: $age лет\nПодиумов: $wins\n$quote\n\n$bio"
-}
+)

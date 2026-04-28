@@ -43,19 +43,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.clickable
-import androidx.compose.runtime.currentComposer
+import androidx.compose.ui.text.font.FontStyle
 
 val gradientList = listOf(Color.Gray, Color.Gray, Color.White)
 
 @Composable
 fun PilotDetailsScreen(
     balanceRub: Int = 1450,
-    onBuyTicketClick: () -> Unit = {},
+    currentRacer: Racer = RacersData.diana
 ) {
 
     var isMenuVisible by remember { mutableStateOf(false) }
-
-    var currentRacer by remember { mutableStateOf(RacersData.diana) }
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -92,6 +90,65 @@ fun PilotDetailsScreen(
                 NavigationMenu(onClose = { isMenuVisible = false })
             }
         }
+    }
+}
+
+@Composable
+fun RacerBio(racer: Racer) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = racer.fullName,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White
+        )
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = racer.country,
+                fontSize = 16.sp,
+                color = Color.Red.copy(alpha = 0.7f)
+            )
+            Text(
+                text = "•",
+                fontSize = 16.sp,
+                color = Color.White.copy(alpha = 0.5f)
+            )
+            Text(
+                text = "${racer.age} лет",
+                fontSize = 16.sp,
+                color = Color.White.copy(alpha = 0.7f)
+            )
+            Text(
+                text = "•",
+                fontSize = 16.sp,
+                color = Color.White.copy(alpha = 0.5f)
+            )
+            Text(
+                text = "${racer.wins} подиумов",
+                fontSize = 16.sp,
+                color = Color.Green
+            )
+        }
+
+        Text(
+            text = "«${racer.quote}»",
+            fontSize = 18.sp,
+            fontStyle = FontStyle.Italic,
+            color = Color.White.copy(alpha = 0.9f),
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+
+        Text(
+            text = racer.bio,
+            fontSize = 16.sp,
+            color = Color.White,
+            lineHeight = 20.sp
+        )
     }
 }
 
@@ -176,24 +233,29 @@ private fun PhotoAndDescription(racer: Racer) {
             RacerImage(racer)
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp)
+                .padding(horizontal = 12.dp)
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        color = Color.DarkGray.copy(alpha = 0.7f),
-                        shape = RoundedCornerShape(12.dp)
-                    )
                     .padding(16.dp)
+                    .clip(shape = RoundedCornerShape(20.dp))
             ) {
+                Image(
+                    painter = painterResource(id = R.drawable.wp1),
+                    contentDescription = "фон текста биографии",
+                    modifier = Modifier.matchParentSize(),
+                    contentScale = ContentScale.Crop,
+                )
                 Column(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp)
                 ) {
                     Text(
                         text = "${racer.name}",
@@ -209,11 +271,7 @@ private fun PhotoAndDescription(racer: Racer) {
                         textAlign = TextAlign.Center
                     )
 
-                    Text(
-                        text = "${racer.fullDescription}",
-                        fontSize = 18.sp,
-                        color = Color.White.copy(alpha = 0.9f)
-                    )
+                    RacerBio(racer)
                 }
             }
         }
@@ -223,7 +281,7 @@ private fun PhotoAndDescription(racer: Racer) {
 @Composable
 private fun RacerImage(racer: Racer) {
     Image(
-        painter = painterResource(id = racer.imageResId),  // ← здесь создаём painter
+        painter = painterResource(id = racer.imageResId),
         contentDescription = racer.name,
         modifier = Modifier.fillMaxSize(),
         contentScale = ContentScale.Crop
