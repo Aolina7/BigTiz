@@ -2,7 +2,6 @@ package com.example.bigtiz.ui.screen.pilot_details
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,7 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,17 +38,21 @@ import com.example.bigtiz.R
 import com.example.bigtiz.Racer
 import com.example.bigtiz.RacersData
 import com.example.bigtiz.ui.common.HamburgerMenuButton
-
-
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.foundation.clickable
 
 val gradientList = listOf(Color.Gray, Color.Gray, Color.White)
 
 @Composable
 fun PilotDetailsScreen(
     balanceRub: Int = 1450,
-    onMenuClick: () -> Unit = {},
     onBuyTicketClick: () -> Unit = {},
 ) {
+
+    var isMenuVisible by remember { mutableStateOf(false) }
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -69,10 +71,23 @@ fun PilotDetailsScreen(
             PilotDetailsTopBar(
                 title = "Бик Тиз",
                 balanceRub = balanceRub,
-                onMenuClick = onMenuClick
+                onMenuClick = {
+                    isMenuVisible = true
+                },
             )
 
             DrawPhotoAndDescription(racer = RacersData.alina)
+        }
+
+        if (isMenuVisible) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.5f))
+                    .clickable { isMenuVisible = false }
+            ) {
+                DrawMenu(onClose = { isMenuVisible = false })
+            }
         }
     }
 }
@@ -205,5 +220,160 @@ private fun DrawPhotoAndDescription(racer: Racer) {
         }
     }
 }
+
+
+@Composable
+fun DrawMenu(onClose: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                color = Color.Black.copy(0.6f),
+            )
+    )
+    Box(
+        modifier = Modifier.fillMaxSize()
+            .padding(start = 20.dp, top = 90.dp),
+    ) {
+        Box(
+            modifier = Modifier
+                .height(750.dp)
+                .width(175.dp)
+                .background(
+                    color = Color.DarkGray.copy(0.9f),
+                    shape = RoundedCornerShape(15.dp)
+                )
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize()
+                    .padding(start = 8.dp)
+            ) {
+                Spacer(modifier = Modifier.height(5.dp))
+
+                Button(
+                    onClick = {println("переход на биографию дианы")},
+                    modifier = Modifier
+                        .size(160.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.White
+                    ),
+                    contentPadding = PaddingValues(0.dp),
+                    shape = RoundedCornerShape(50.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.navigation_menu_diana),
+                        contentDescription = "диана",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = {println("переход на биографию аниты")},
+                    modifier = Modifier
+                        .size(160.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.White
+                    ),
+                    contentPadding = PaddingValues(0.dp),
+                    shape = RoundedCornerShape(50.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.navigation_menu_anita),
+                        contentDescription = "анита",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = {println("переход на биографию алины")},
+                    modifier = Modifier
+                        .size(160.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.White
+                    ),
+                    contentPadding = PaddingValues(0.dp),
+                    shape = RoundedCornerShape(50.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.navigation_menu_alina),
+                        contentDescription = "алина",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = {println("переход на биографию александра")},
+                    modifier = Modifier
+                        .size(160.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.White
+                    ),
+                    contentPadding = PaddingValues(0.dp),
+                    shape = RoundedCornerShape(50.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.navigation_menu_alexander),
+                        contentDescription = "александр",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Button(
+                    onClick = { print("переход на главную страницу") },
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(50.dp))
+                        .height(40.dp)
+                        .width(160.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.LightGray.copy(alpha = 0.2f),
+                    ),
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.navigation_menu_home),
+                            contentDescription = "кнопка на главную",
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .width(40.dp),
+                            contentScale = ContentScale.Crop
+                        )
+
+                        Text(
+                            text = "вернуться на главную",
+                            fontSize = 13.sp,
+                            lineHeight = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.LightGray,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 4.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 
