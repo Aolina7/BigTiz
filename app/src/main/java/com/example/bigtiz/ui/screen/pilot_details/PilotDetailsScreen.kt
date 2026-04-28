@@ -78,7 +78,7 @@ fun PilotDetailsScreen(
                 },
             )
 
-            DrawPhotoAndDescription(racer = currentRacer)
+            PhotoAndDescription(racer = currentRacer)
         }
 
         if (isMenuVisible) {
@@ -88,7 +88,7 @@ fun PilotDetailsScreen(
                     .background(Color.Black.copy(alpha = 0.5f))
                     .clickable { isMenuVisible = false }
             ) {
-                DrawMenu(onClose = { isMenuVisible = false })
+                NavigationMenu(onClose = { isMenuVisible = false })
             }
         }
     }
@@ -157,7 +157,7 @@ private fun BalanceChip(
 }
 
 @Composable
-private fun DrawPhotoAndDescription(racer: Racer) {
+private fun PhotoAndDescription(racer: Racer) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -225,7 +225,7 @@ private fun DrawPhotoAndDescription(racer: Racer) {
 
 
 @Composable
-fun DrawMenu(onClose: () -> Unit) {
+fun NavigationMenu(onClose: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
