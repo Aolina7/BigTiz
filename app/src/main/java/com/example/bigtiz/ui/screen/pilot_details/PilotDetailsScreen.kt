@@ -54,6 +54,8 @@ fun PilotDetailsScreen(
 
     var isMenuVisible by remember { mutableStateOf(false) }
 
+    var currentRacer by remember { mutableStateOf(RacersData.diana) }
+
     Surface(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.wp6),
@@ -76,7 +78,7 @@ fun PilotDetailsScreen(
                 },
             )
 
-            DrawPhotoAndDescription(racer = RacersData.alina)
+            DrawPhotoAndDescription(racer = currentRacer)
         }
 
         if (isMenuVisible) {
@@ -255,7 +257,7 @@ fun DrawMenu(onClose: () -> Unit) {
                 Spacer(modifier = Modifier.height(5.dp))
 
                 Button(
-                    onClick = {println("переход на биографию дианы")},
+                    onClick = {},
                     modifier = Modifier
                         .size(160.dp),
                     colors = ButtonDefaults.buttonColors(
