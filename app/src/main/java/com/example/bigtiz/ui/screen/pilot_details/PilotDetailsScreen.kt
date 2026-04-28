@@ -239,11 +239,15 @@ fun DrawMenu(onClose: () -> Unit) {
             modifier = Modifier
                 .height(750.dp)
                 .width(175.dp)
-                .background(
-                    color = Color.DarkGray.copy(0.9f),
-                    shape = RoundedCornerShape(15.dp)
-                )
+                .clip(shape = RoundedCornerShape(20.dp))
         ) {
+
+            Image(
+                painter = painterResource(id = R.drawable.wp1),
+                contentDescription = "фон навигационного меню",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
+            )
             Column(
                 modifier = Modifier.fillMaxSize()
                     .padding(start = 8.dp)
