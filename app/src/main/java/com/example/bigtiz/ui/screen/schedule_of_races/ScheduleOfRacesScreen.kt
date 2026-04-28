@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,16 +33,11 @@ import androidx.compose.ui.unit.sp
 import com.example.bigtiz.R
 import com.example.bigtiz.ui.common.HamburgerMenuButton
 
-
-data class Schedule(
-    val date: String,
-    val city: Int
-)
-
 @Composable
 fun ScheduleOfRacesScreen(
     balance: Int = 1450,
-    onMenuClick: () -> Unit = {}
+    onMenuClick: () -> Unit = {},
+    onTicketClick: () -> Unit = {},
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -55,12 +53,29 @@ fun ScheduleOfRacesScreen(
                 .padding(horizontal = 8.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-
             ScheduleHeader(
                 balance = balance,
                 onMenuClick = onMenuClick,
             )
-            }
+            CityRace(
+                dayMonth = "04.03",
+                year = "2026",
+                city = "Австралия",
+                onTicketClick = onTicketClick
+            )
+            CityRace(
+                dayMonth = "05.04",
+                year = "2026",
+                city = "Германия",
+                onTicketClick = onTicketClick
+            )
+            CityRace(
+                dayMonth = "04.05",
+                year = "2026",
+                city = "Турция",
+                onTicketClick = onTicketClick
+            )
+        }
     }
 }
 
@@ -123,6 +138,77 @@ private fun Balance(
             fontWeight = FontWeight.Bold,
             color = Color.White,
             fontSize = 16.sp,
+        )
+    }
+}
+
+@Composable
+private fun CityRace(
+    dayMonth: String,
+    year: String,
+    city: String,
+    onTicketClick: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(130.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(Color(0xFF0F0F0F).copy(alpha = 0.5f)),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Text(
+                    text = dayMonth,
+                    fontSize = 16.sp,
+                    color = Color.White.copy(alpha = 0.7f),
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    text = year,
+                    fontSize = 16.sp,
+                    color = Color.White.copy(alpha = 0.7f),
+                    fontWeight = FontWeight.Medium
+                )
+            }
+
+            Text(
+                text = city,
+                fontSize = 34.sp,
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+            TicketButton(onClick = onTicketClick)
+        }
+    }
+}
+
+@Composable
+private fun TicketButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier.size(90.dp, 50.dp),
+        shape = RoundedCornerShape(25.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.White.copy(alpha = 0.2f)
+        ),
+        contentPadding = PaddingValues(0.dp)
+    ) {
+        Text(
+            text = "БИЛЕТ",
+            fontSize = 14.sp,
+            color = Color.White.copy(alpha = 0.9f),
+            fontWeight = FontWeight.Medium,
         )
     }
 }
