@@ -43,6 +43,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.clickable
+import androidx.compose.runtime.currentComposer
 
 val gradientList = listOf(Color.Gray, Color.Gray, Color.White)
 
@@ -172,12 +173,7 @@ private fun PhotoAndDescription(racer: Racer) {
                 .background(Color.Gray.copy(alpha = 0.3f)),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = racer.painter,
-                contentDescription = "Фотография ${racer.name}",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
+            RacerImage(racer)
         }
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -225,6 +221,15 @@ private fun PhotoAndDescription(racer: Racer) {
 }
 
 @Composable
+private fun RacerImage(racer: Racer) {
+    Image(
+        painter = painterResource(id = racer.imageResId),  // ← здесь создаём painter
+        contentDescription = racer.name,
+        modifier = Modifier.fillMaxSize(),
+        contentScale = ContentScale.Crop
+    )
+}
+@Composable
 fun ScreenDimming() {
     Box(
         modifier = Modifier
@@ -248,12 +253,7 @@ fun PhotoAsButton(racer: Racer) {
         contentPadding = PaddingValues(0.dp),
         shape = RoundedCornerShape(50.dp)
     ) {
-        Image(
-            painter = racer.painter,
-            contentDescription = "$racer.name",
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
+        RacerImage(racer)
     }
 }
 

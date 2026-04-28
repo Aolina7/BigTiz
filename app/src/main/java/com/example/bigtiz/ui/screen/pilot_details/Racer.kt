@@ -15,9 +15,6 @@ data class Racer(
     val wins: Int,
     val quote: String
 ) {
-    val painter: Painter
-        @Composable get() = painterResource(id = imageResId)
-
     val fullDescription: String
         get() = "$fullName - $country\nВозраст: $age лет\nПодиумов: $wins\n$quote\n\n$bio"
 }
