@@ -94,7 +94,7 @@ fun PilotDetailsScreen(
 }
 
 @Composable
-fun RacerBio(racer: Racer) {
+private fun RacerBio(racer: Racer) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -288,7 +288,7 @@ private fun RacerImage(racer: Racer) {
     )
 }
 @Composable
-fun ScreenDimming() {
+private fun ScreenDimming() {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -299,7 +299,7 @@ fun ScreenDimming() {
 }
 
 @Composable
-fun PhotoAsButton(racer: Racer) {
+private fun PhotoAsButton(racer: Racer) {
     Button(
         onClick = {},
         modifier = Modifier
@@ -316,7 +316,7 @@ fun PhotoAsButton(racer: Racer) {
 }
 
 @Composable
-fun ButtonGoHome() {
+private fun ButtonGoHome() {
     Button(
         onClick = { print("переход на главную страницу") },
         modifier = Modifier
@@ -357,7 +357,7 @@ fun ButtonGoHome() {
 }
 
 @Composable
-fun NavigationMenu(onClose: () -> Unit) {
+private fun NavigationMenu(onClose: () -> Unit) {
     ScreenDimming()
     Box(
         modifier = Modifier
