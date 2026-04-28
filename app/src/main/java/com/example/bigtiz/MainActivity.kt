@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.example.bigtiz.ui.screen.pilot_details.PilotDetailsScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.example.bigtiz.ui.screen.race_info.RaceInfoScreen
@@ -31,7 +32,9 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            TicketSelectionScreen(ticket, dataFile)
+            //TicketSelectionScreen(ticket, dataFile)
+            //RaceInfoScreen()
+            PilotDetailsScreen()
         }
     }
 }
