@@ -174,7 +174,7 @@ private fun DrawPhotoAndDescription(racer: Racer) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        color = Color.Gray.copy(alpha = 0.7f),
+                        color = Color.DarkGray.copy(alpha = 0.7f),
                         shape = RoundedCornerShape(12.dp)
                     )
                     .padding(16.dp)
