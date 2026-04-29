@@ -1,0 +1,260 @@
+[33mcommit b8a038620d7721847d51eb8fb8d3fa03e591875b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmasterTrial[m[33m)[m
+Merge: 1c6d48e e3a7621
+Author: anexcizen <anitatalbieva@gmail.com>
+Date:   Tue Apr 28 22:33:29 2026 +0300
+
+    Merge pull request #9 from Aolina7/ex-1-anitaa
+    
+    экран с биографией
+
+[33mcommit e3a76213bb41a0ea2c7a13eba74d3faa0559c92b[m[33m ([m[1;31morigin/ex-1-anitaa[m[33m)[m
+Merge: 348c78c 1c6d48e
+Author: anexcizen <anitatalbieva@gmail.com>
+Date:   Tue Apr 28 22:31:23 2026 +0300
+
+    Merge branch 'master' into ex-1-anitaa
+
+[33mcommit 348c78c1fa8d1dd78ae43beb764a9b2d8b73f353[m
+Author: anita <anitatalbieva@gmail.com>
+Date:   Tue Apr 28 21:33:27 2026 +0300
+
+    добавлены модификаторы доступа для некоторых функций
+
+[33mcommit 145941692f3ce6fd873df19c4abc5113790d35c6[m
+Author: anita <anitatalbieva@gmail.com>
+Date:   Tue Apr 28 21:15:20 2026 +0300
+
+    исправлена ошибка в тексте биографии
+
+[33mcommit 434809b5b4ab2257fdf277fe59da2ceca6520297[m
+Author: anita <anitatalbieva@gmail.com>
+Date:   Tue Apr 28 21:13:41 2026 +0300
+
+    функция getFullDescription убрана из Racer и переписана в PilotDetailsScreen как RacerBio с использованием текстов, разных цветов. а так же поменян фон биографии для красоты
+
+[33mcommit 1c6d48ef8dc9a9f720a885e41953461dd32fcaa8[m
+Merge: d65ffc2 fc5fb24
+Author: Olina <159796757+Aolina7@users.noreply.github.com>
+Date:   Tue Apr 28 21:07:47 2026 +0300
+
+    Merge pull request #7 from Aolina7/EX-1-Alina
+    
+    EX-1-Alina
+
+[33mcommit 9f3673a2b508a7b4ec0262bda6542ce35a2e8241[m
+Author: anita <anitatalbieva@gmail.com>
+Date:   Tue Apr 28 20:27:12 2026 +0300
+
+    функция painter убрана из Racer и переписана в PilotDetailsScreen как composable функция RacerImage
+
+[33mcommit fc5fb244a3053fc5453e5873ce309ae7d7f58d92[m[33m ([m[1;31morigin/EX-1-Alina[m[33m)[m
+Author: Olina <alina.usupova2007@gmail.com>
+Date:   Tue Apr 28 22:26:22 2026 +0500
+
+    creating the city component of the races with ticket button
+
+[33mcommit 7a04524093d086b05a280373f702af258f102893[m
+Author: anita <anitatalbieva@gmail.com>
+Date:   Tue Apr 28 20:17:43 2026 +0300
+
+    функция NavigationMenu разделена для чиабельности. кнопки вынесены в отдельные функции
+
+[33mcommit d33f306143bae01b5cf81c1febd253ed2812c2f8[m
+Author: anita <anitatalbieva@gmail.com>
+Date:   Tue Apr 28 19:32:44 2026 +0300
+
+    поменяны названия функций
+
+[33mcommit d65ffc2aad3e7b946b374f7cdece7ae295312252[m
+Merge: 758647c 7341828
+Author: Sanechkaprog <165583946+Sanechkaprog@users.noreply.github.com>
+Date:   Tue Apr 28 17:39:58 2026 +0300
+
+    Merge pull request #4 from Aolina7/fourthScreen
+    
+    Reformat code, delete classes, solve problems
+
+[33mcommit b5d1313e40b89d741284e592dc759ee25068a1ae[m
+Author: anita <anitatalbieva@gmail.com>
+Date:   Tue Apr 28 16:30:20 2026 +0300
+
+    сохранение текущего гонщика
+
+[33mcommit cc1e56f8c15ea434a0869fd782562ee38c05cf7c[m
+Author: anita <anitatalbieva@gmail.com>
+Date:   Tue Apr 28 16:16:35 2026 +0300
+
+    изменен фон навигационного меню
+
+[33mcommit 968552fee8068b68867317a93bd36c2b564fa274[m
+Author: anita <anitatalbieva@gmail.com>
+Date:   Tue Apr 28 16:04:50 2026 +0300
+
+    реализована функция рисовки навигационного меню. вызывается при клике на гамбургерменю
+
+[33mcommit 61c7a0b0bfa3643e9e6493406e1481cc03bcdbcf[m
+Author: anita <anitatalbieva@gmail.com>
+Date:   Tue Apr 28 15:41:31 2026 +0300
+
+    поменян цвет фона для текста
+
+[33mcommit 7341828b53a2526745cdae859d10f9aa7cb490ca[m[33m ([m[1;31morigin/fourthScreen[m[33m, [m[1;32mfourthScreen[m[33m)[m
+Author: Sanechkaprog <165583946+Sanechkaprog@users.noreply.github.com>
+Date:   Tue Apr 28 15:02:03 2026 +0300
+
+    combined three functions into one and made buttons apaptive
+
+[33mcommit 0426e278566fd30f4a47714c94052a36a61ee169[m
+Author: anita <anitatalbieva@gmail.com>
+Date:   Tue Apr 28 01:16:51 2026 +0300
+
+    реализованы функция рисовки фото и биографии гонщика
+
+[33mcommit c21fd5071da6a0526ba0ac715ec8531f576cdd88[m
+Author: anita <anitatalbieva@gmail.com>
+Date:   Tue Apr 28 00:29:53 2026 +0300
+
+    добавлены классы Racer и RacerData и изображения гонщиков в drawable
+
+[33mcommit 1f3867aa803cad23fde1791b70ea08855d36d694[m
+Author: anita <anitatalbieva@gmail.com>
+Date:   Tue Apr 28 00:07:34 2026 +0300
+
+    создание файла в новой ветке
+
+[33mcommit 758647ce73772b30b200410b6ac2689c6e52fa21[m
+Merge: 58e21af 31aaea5
+Author: Olina <159796757+Aolina7@users.noreply.github.com>
+Date:   Sun Apr 26 23:26:56 2026 +0300
+
+    Merge pull request #6 from Aolina7/EX-0-versions-Alina
+    
+    changes in gitignore and build.gradle.kts
+
+[33mcommit 31aaea5068d0b9da4db201f4b7bec93b4ed38082[m[33m ([m[1;31morigin/EX-0-versions-Alina[m[33m)[m
+Author: Olina <159796757+Aolina7@users.noreply.github.com>
+Date:   Mon Apr 27 01:24:32 2026 +0500
+
+    Delete .idea directory
+
+[33mcommit f7a6c31698caf7b0d23d696ed066de97bc3fb15e[m
+Author: Olina <alina.usupova2007@gmail.com>
+Date:   Mon Apr 27 01:22:54 2026 +0500
+
+    libraries changing
+
+[33mcommit 6210e8f3f463df26e8821b04988e4a6210e8ee4f[m
+Author: Olina <alina.usupova2007@gmail.com>
+Date:   Mon Apr 27 00:58:12 2026 +0500
+
+    changes in gitignore, .idea files
+
+[33mcommit 0cbe5d3422b24bc4d4f467e6291c032995bf4ab9[m
+Author: Sanechkaprog <165583946+Sanechkaprog@users.noreply.github.com>
+Date:   Sun Apr 26 20:49:51 2026 +0300
+
+    Reformat code, delete classes, solve problems
+
+[33mcommit 9f32989fc3f7f0b2838b5a388231fb4cf54c65a3[m[33m ([m[1;31morigin/Olina[m[33m)[m
+Author: Olina <alina.usupova2007@gmail.com>
+Date:   Sun Apr 26 22:32:04 2026 +0500
+
+    creating wallpaper, header
+
+[33mcommit 58e21af1efb92761edb26723ba9b62a4f720b5c7[m
+Author: dianamuhametzanova <dianamuhametzanova1790@gmail.com>
+Date:   Sun Apr 26 18:15:33 2026 +0300
+
+    Delete .idea directory
+
+[33mcommit 73001aec93dce56c6cf973b60213aab00fac9e01[m
+Author: Diana Muhametzyanova <dianamuhametzanova1790@gmail.com>
+Date:   Sun Apr 26 18:14:33 2026 +0300
+
+    gitignore update
+
+[33mcommit 08910be55b15d54369d071315367c524c82e6cbc[m
+Merge: aba600b a1a8831
+Author: dianamuhametzanova <dianamuhametzanova1790@gmail.com>
+Date:   Sun Apr 26 17:57:17 2026 +0300
+
+    Merge pull request #3 from Aolina7/diana
+    
+    Diana
+
+[33mcommit a1a8831779640860b38edc333ef677de29a24596[m
+Author: Diana Muhametzyanova <dianamuhametzanova1790@gmail.com>
+Date:   Sun Apr 26 17:55:40 2026 +0300
+
+    TicketSelectionScreen add
+
+[33mcommit 1f6425c0b02c2a04d402ab219555f23c1f20263a[m
+Author: Diana Muhametzyanova <dianamuhametzanova1790@gmail.com>
+Date:   Sun Apr 26 17:46:24 2026 +0300
+
+    The general part of the code (hamburger)
+
+[33mcommit c252b7279ccd18cc0df35200da5e947f64154950[m
+Author: Diana Muhametzyanova <dianamuhametzanova1790@gmail.com>
+Date:   Sun Apr 26 15:43:26 2026 +0300
+
+    mvp
+
+[33mcommit aba600b3765b7e965901b6090ccf12d69239b9e7[m
+Author: Sanechkaprog <165583946+Sanechkaprog@users.noreply.github.com>
+Date:   Wed Apr 22 23:35:30 2026 +0300
+
+    Create README.md
+    
+    idk
+
+[33mcommit abb8c5ce6e8e631f0b937d1fc976f31c01793a27[m
+Author: Sanechkaprog <165583946+Sanechkaprog@users.noreply.github.com>
+Date:   Wed Apr 22 23:15:21 2026 +0300
+
+    some changes
+
+[33mcommit cdba5baf63fde330bfda4df2a7d1b13349d7ee49[m[33m ([m[1;32mfourthWindow[m[33m)[m
+Merge: 319419a 40bbccf
+Author: Sanechkaprog <165583946+Sanechkaprog@users.noreply.github.com>
+Date:   Wed Apr 22 21:11:22 2026 +0300
+
+    Merge branch 'master' into fourthWindow
+    commit
+
+[33mcommit 40bbccf361460e83b1102d65467cddaaf23db3d2[m
+Author: Sanechkaprog <165583946+Sanechkaprog@users.noreply.github.com>
+Date:   Wed Apr 22 21:09:46 2026 +0300
+
+    add total icon
+
+[33mcommit 319419a2b2c2139784ce7941732926bcf800bd28[m
+Merge: edfe748 88e9aff
+Author: Sanechkaprog <165583946+Sanechkaprog@users.noreply.github.com>
+Date:   Wed Apr 22 17:52:10 2026 +0300
+
+    merge
+
+[33mcommit edfe74831c47cc353944950dd04476d4a35bfb99[m
+Author: Sanechkaprog <165583946+Sanechkaprog@users.noreply.github.com>
+Date:   Wed Apr 22 17:47:46 2026 +0300
+
+    -
+
+[33mcommit 787271b69c82522f78aaf11a3cc9925a3d2c4b37[m
+Author: Sanechkaprog <165583946+Sanechkaprog@users.noreply.github.com>
+Date:   Wed Apr 22 17:45:03 2026 +0300
+
+    -
+
+[33mcommit 88e9aff4252868934a907eec385647cc157d3886[m
+Author: Sanechkaprog <165583946+Sanechkaprog@users.noreply.github.com>
+Date:   Wed Apr 22 17:25:09 2026 +0300
+
+    Creating a window
+
+[33mcommit 465a4daffdd87481c5cb5b9aceb720effd9fbb7a[m
+Author: Olina <alina.usupova2007@gmail.com>
+Date:   Sat Apr 4 21:46:11 2026 +0500
+
+    Initial commit

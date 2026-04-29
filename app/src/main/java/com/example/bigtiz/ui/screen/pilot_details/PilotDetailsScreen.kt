@@ -53,6 +53,7 @@ fun PilotDetailsScreen(
     currentRacer: Racer = RacersData.diana
 ) {
 
+    var selectedRacer by remember { mutableStateOf(currentRacer) }
     var isMenuVisible by remember { mutableStateOf(false) }
 
     Surface(modifier = Modifier.fillMaxSize()) {
@@ -77,7 +78,7 @@ fun PilotDetailsScreen(
                 },
             )
 
-            PhotoAndDescription(racer = currentRacer)
+            PhotoAndDescription(racer = selectedRacer)
         }
 
         if (isMenuVisible) {
@@ -87,7 +88,13 @@ fun PilotDetailsScreen(
                     .background(Color.Black.copy(alpha = 0.5f))
                     .clickable { isMenuVisible = false }
             ) {
-                NavigationMenu(onClose = { isMenuVisible = false })
+                NavigationMenu(
+                    onClose = { isMenuVisible = false },
+                    onRacerClick = { racer ->
+                        selectedRacer = racer
+                        isMenuVisible = false
+                    }
+                )
             }
         }
     }
@@ -299,11 +306,13 @@ private fun ScreenDimming() {
 }
 
 @Composable
-private fun PhotoAsButton(racer: Racer) {
+private fun PhotoAsButton(
+    racer: Racer,
+    onClick: () -> Unit
+) {
     Button(
-        onClick = {},
-        modifier = Modifier
-            .size(160.dp),
+        onClick = onClick,
+        modifier = Modifier.size(160.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
             contentColor = Color.White
@@ -314,7 +323,6 @@ private fun PhotoAsButton(racer: Racer) {
         RacerImage(racer)
     }
 }
-
 @Composable
 private fun ButtonGoHome() {
     Button(
@@ -357,7 +365,10 @@ private fun ButtonGoHome() {
 }
 
 @Composable
-private fun NavigationMenu(onClose: () -> Unit) {
+private fun NavigationMenu(
+    onClose: () -> Unit,
+    onRacerClick: (Racer) -> Unit
+) {
     ScreenDimming()
     Box(
         modifier = Modifier
@@ -387,7 +398,10 @@ private fun NavigationMenu(onClose: () -> Unit) {
                 Spacer(modifier = Modifier.height(5.dp))
 
                 for (racer in RacersData.allRacers) {
-                    PhotoAsButton(racer = racer)
+                    PhotoAsButton(
+                        racer = racer,
+                        onClick = { onRacerClick(racer) }
+                    )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 

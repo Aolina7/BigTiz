@@ -5,10 +5,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import com.example.bigtiz.ui.screen.pilot_details.PilotDetailsScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import com.example.bigtiz.ui.screen.race_info.RaceInfoScreen
+import com.example.bigtiz.ui.screen.schedule_of_races.ScheduleOfRacesScreen
 import com.example.bigtiz.ui.screen.ticket_selection.TicketSelectionScreen
 import com.example.bigtiz.ui.screen.ticket_selection.Tickets
 import com.example.bigtiz.ui.screen.ticket_selection.jsonConfig
@@ -32,9 +37,19 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            //TicketSelectionScreen(ticket, dataFile)
-            //RaceInfoScreen()
-            PilotDetailsScreen()
+            val pagerState = rememberPagerState(pageCount = { 4 })
+
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxSize()
+            ) { page ->
+                when (page) {
+                    0 -> PilotDetailsScreen()
+                    1 -> RaceInfoScreen()
+                    2 -> ScheduleOfRacesScreen()
+                    3 -> TicketSelectionScreen(ticket, dataFile)
+                }
+            }
         }
     }
 }

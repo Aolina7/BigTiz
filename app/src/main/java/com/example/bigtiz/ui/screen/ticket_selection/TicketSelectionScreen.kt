@@ -73,8 +73,10 @@ val jsonConfig: Json = Json {
 
 @Composable
 fun TicketSelectionScreen(tickets: Tickets, file: File) {
-    DrawSurface()
-    ColumnsOfOvals(tickets, file)
+    Box(modifier = Modifier.fillMaxSize()) {
+        DrawSurface()
+        ColumnsOfOvals(tickets, file)
+    }
 }
 
 @Composable
