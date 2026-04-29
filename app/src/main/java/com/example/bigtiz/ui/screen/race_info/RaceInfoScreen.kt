@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bigtiz.R
 import com.example.bigtiz.ui.common.HamburgerMenuButton
+import com.example.bigtiz.ui.common.Header
 
 data class RaceResultRow(
     val position: Int,
@@ -66,8 +67,6 @@ fun RaceInfoScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             RaceInfoTopBar(
-                title = "Бик Тиз",
-                balanceRub = balanceRub,
                 onMenuClick = onMenuClick,
             )
 
@@ -82,66 +81,9 @@ fun RaceInfoScreen(
 
 @Composable
 private fun RaceInfoTopBar(
-    title: String,
-    balanceRub: Int,
     onMenuClick: () -> Unit,
 ) {
-    val list = listOf(Color.Gray, Color.Gray, Color.White)
-
-    Box(
-        modifier = Modifier
-            .padding(top = 18.dp)
-            .fillMaxWidth()
-            .height(60.dp)
-            .clip(RoundedCornerShape(50))
-            .background(Color(0xFF1C1C1C).copy(alpha = 0.75f))
-            .padding(horizontal = 16.dp),
-    ) {
-        Text(
-            text = title,
-            fontSize = 24.sp,
-            style = TextStyle(brush = Brush.linearGradient(list)),
-            modifier = Modifier.align(Alignment.Center),
-        )
-
-        HamburgerMenuButton(
-            onClick = onMenuClick,
-            modifier = Modifier.align(Alignment.CenterStart),
-        )
-
-        BalanceChip(
-            balanceRub = balanceRub,
-            modifier = Modifier.align(Alignment.CenterEnd),
-        )
-    }
-}
-
-@Composable
-private fun BalanceChip(
-    balanceRub: Int,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.rubblik),
-            contentDescription = "Рубли",
-            modifier = Modifier
-                .clip(RoundedCornerShape(100))
-                .size(20.dp)
-                .background(Color.Gray),
-            tint = Color.Unspecified,
-        )
-        Text(
-            text = balanceRub.toString(),
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
-            fontSize = 16.sp,
-        )
-    }
+    Header(onMenuClick)
 }
 
 @Composable

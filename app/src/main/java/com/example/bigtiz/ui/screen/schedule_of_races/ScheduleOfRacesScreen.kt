@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bigtiz.R
 import com.example.bigtiz.ui.common.HamburgerMenuButton
+import com.example.bigtiz.ui.common.Header
 
 @Composable
 fun ScheduleOfRacesScreen(
@@ -54,7 +55,6 @@ fun ScheduleOfRacesScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             ScheduleHeader(
-                balance = balance,
                 onMenuClick = onMenuClick,
             )
             CityRace(
@@ -81,67 +81,10 @@ fun ScheduleOfRacesScreen(
 
 @Composable
 private fun ScheduleHeader(
-    balance: Int,
     onMenuClick: () -> Unit
 ) {
-    val list = listOf(Color.Gray, Color.Gray, Color.White)
-
-    Box(
-        modifier = Modifier
-            .padding(top = 18.dp)
-            .fillMaxWidth()
-            .height(60.dp)
-            .clip(RoundedCornerShape(50))
-            .background(Color(0xFF1C1C1C).copy(alpha = 0.75f))
-            .padding(horizontal = 16.dp),
-    ) {
-        Text(
-            text = "Бик Тиз",
-            fontSize = 24.sp,
-            style = TextStyle(brush = Brush.linearGradient(list)),
-            modifier = Modifier.align(Alignment.Center),
-        )
-
-        HamburgerMenuButton(
-            onClick = onMenuClick,
-            modifier = Modifier.align(Alignment.CenterStart),
-        )
-
-        Balance(
-            balance = balance,
-            modifier = Modifier.align(Alignment.CenterEnd),
-        )
-    }
+    Header(onMenuClick)
 }
-
-@Composable
-private fun Balance(
-    balance: Int,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.rubblik),
-            contentDescription = "Рубли",
-            modifier = Modifier
-                .clip(RoundedCornerShape(100))
-                .size(20.dp)
-                .background(Color.Gray),
-            tint = Color.Unspecified,
-        )
-        Text(
-            text = balance.toString(),
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
-            fontSize = 16.sp,
-        )
-    }
-}
-
 @Composable
 private fun CityRace(
     dayMonth: String,

@@ -44,6 +44,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.text.font.FontStyle
+import com.example.bigtiz.ui.common.Header
 
 val gradientList = listOf(Color.Gray, Color.Gray, Color.White)
 
@@ -71,8 +72,6 @@ fun PilotDetailsScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             PilotDetailsTopBar(
-                title = "Бик Тиз",
-                balanceRub = balanceRub,
                 onMenuClick = {
                     isMenuVisible = true
                 },
@@ -161,65 +160,11 @@ private fun RacerBio(racer: Racer) {
 
 @Composable
 private fun PilotDetailsTopBar(
-    title: String,
-    balanceRub: Int,
     onMenuClick: () -> Unit,
 ) {
-    Box(
-        modifier = Modifier
-            .padding(top = 18.dp)
-            .fillMaxWidth()
-            .height(60.dp)
-            .clip(RoundedCornerShape(50))
-            .background(Color(0xFF1C1C1C).copy(alpha = 0.75f))
-            .padding(horizontal = 16.dp),
-    ) {
-        Text(
-            text = title,
-            fontSize = 24.sp,
-            style = TextStyle(brush = Brush.linearGradient(gradientList)),
-            modifier = Modifier.align(Alignment.Center),
-        )
-
-        HamburgerMenuButton(
-            onClick = onMenuClick,
-            modifier = Modifier.align(Alignment.CenterStart),
-        )
-
-        BalanceChip(
-            balanceRub = balanceRub,
-            modifier = Modifier.align(Alignment.CenterEnd),
-        )
-    }
+    Header(onMenuClick)
 }
 
-@Composable
-private fun BalanceChip(
-    balanceRub: Int,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.rubblik),
-            contentDescription = "Рубли",
-            modifier = Modifier
-                .clip(RoundedCornerShape(100))
-                .size(20.dp)
-                .background(Color.Gray),
-            tint = Color.Unspecified,
-        )
-        Text(
-            text = balanceRub.toString(),
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
-            fontSize = 16.sp,
-        )
-    }
-}
 
 @Composable
 private fun PhotoAndDescription(racer: Racer) {

@@ -44,13 +44,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bigtiz.R
+import com.example.bigtiz.ui.common.AppConstants
 import com.example.bigtiz.ui.common.HamburgerMenuButton
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
 
-var money by mutableIntStateOf(10000)
+var money by mutableIntStateOf(AppConstants.balance)
 
 const val FanZonePrice: Int = 100
 const val VipZonePrice: Int = 1400
@@ -85,7 +86,7 @@ private fun ColumnsOfOvals(tickets: Tickets, file: File) {
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy((-15).dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy((10).dp)) {
             DrawUpperOval()
             DrawOvalBelowUpper()
         }
@@ -157,39 +158,34 @@ private fun DrawSurface() {
 
 @Composable
 private fun DrawUpperOval() {
-    val list = listOf(Color.Gray, Color.Gray, Color.White)
-    Box(
-        modifier = Modifier
-            .padding(vertical = 25.dp)
-            .padding(start = 5.dp)
-            .padding(end = 5.dp)
-            .fillMaxWidth()
-            .height(60.dp)
-            .clip(RoundedCornerShape(50))
-            .background(Color.Gray.copy(alpha = 0.5f))
-            .padding(horizontal = 20.dp),
-    ) {
+
+        val list = listOf(Color.Gray, Color.Gray, Color.White)
+
         Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .padding(top = 18.dp)
+                .fillMaxWidth()
+                .height(60.dp)
+                .clip(RoundedCornerShape(50))
+                .background(Color(0xFF1C1C1C).copy(alpha = 0.75f))
+                .padding(horizontal = 16.dp),
         ) {
             Text(
-                text = stringResource(R.string.ticket_selection_bigtiz),
-                fontSize = 25.sp,
-                style = TextStyle(
-                    brush = Brush.linearGradient(list),
-                ),
+                text = "Бик Тиз",
+                fontSize = 24.sp,
+                style = TextStyle(brush = Brush.linearGradient(list)),
+                modifier = Modifier.align(Alignment.Center),
             )
+            DrawHamburgerMenu()
+
         }
-        DrawHamburgerMenu()
-    }
+
 }
+
 
 @Composable
 private fun DrawHamburgerMenu() {
-    HamburgerMenuButton(
-        onClick = { print("Тут окно 1") },
-    )
+    HamburgerMenuButton({})
     MoneyIcon()
 }
 
@@ -216,10 +212,9 @@ private fun MoneyIcon() {
             )
             Text(
                 text = "$money",
-                modifier = Modifier
-                    .height(30.dp)
-                    .padding(vertical = 2.dp),
                 fontWeight = FontWeight.Bold,
+                color = Color.White,
+                fontSize = 16.sp,
             )
         }
     }
@@ -382,6 +377,7 @@ private fun DrawPayButton(tickets: Tickets, file: File) {
                 onClick = {
                     if (Total <= money) {
                         money -= Total
+                        AppConstants.balance -= Total
                         tickets.PremiumZone -= valuePrem
                         tickets.VipZone -= valueVip
                         tickets.FanZone -= valueFan
