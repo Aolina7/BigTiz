@@ -29,11 +29,11 @@ import androidx.compose.ui.unit.sp
 import com.example.bigtiz.R
 
 @Composable
-public fun Header(
+fun Header(
     onMenuClick: () -> Unit
 ) {
-    val list = listOf(Color.Gray, Color.Gray, Color.White)
     var balance by remember { mutableStateOf(AppConstants.balance) }
+    val list = remember { mutableListOf(Color.Gray, Color.Gray, Color.White)}
     Box(
         modifier = Modifier
             .padding(top = 18.dp)
