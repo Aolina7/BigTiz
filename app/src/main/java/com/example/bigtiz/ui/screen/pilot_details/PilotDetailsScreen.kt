@@ -50,7 +50,6 @@ val gradientList = listOf(Color.Gray, Color.Gray, Color.White)
 
 @Composable
 fun PilotDetailsScreen(
-    balanceRub: Int = 1450,
     currentRacer: Racer = RacersData.diana
 ) {
 

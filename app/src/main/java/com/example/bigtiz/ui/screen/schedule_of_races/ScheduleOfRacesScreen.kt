@@ -36,7 +36,6 @@ import com.example.bigtiz.ui.common.Header
 
 @Composable
 fun ScheduleOfRacesScreen(
-    balance: Int = 1450,
     onMenuClick: () -> Unit = {},
     onTicketClick: () -> Unit = {},
 ) {

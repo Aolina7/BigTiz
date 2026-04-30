@@ -11,16 +11,19 @@ import androidx.compose.foundation.pager.rememberPagerState
 import com.example.bigtiz.ui.screen.pilot_details.PilotDetailsScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.example.bigtiz.ui.screen.race_info.RaceInfoScreen
 import com.example.bigtiz.ui.screen.schedule_of_races.ScheduleOfRacesScreen
 import com.example.bigtiz.ui.screen.ticket_selection.TicketSelectionScreen
 import com.example.bigtiz.ui.screen.ticket_selection.Tickets
 import com.example.bigtiz.ui.screen.ticket_selection.jsonConfig
+import kotlinx.coroutines.launch
 import java.io.File
 
 @SuppressLint("UnsafeOptInUsageError")
 class MainActivity : ComponentActivity() {
+    @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val dataFile = File(filesDir, "DataBase.json")
@@ -37,6 +40,7 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
+            val scope = rememberCoroutineScope()
             val pagerState = rememberPagerState(pageCount = { 4 })
 
             HorizontalPager(
@@ -45,9 +49,9 @@ class MainActivity : ComponentActivity() {
             ) { page ->
                 when (page) {
                     0 -> PilotDetailsScreen()
-                    1 -> RaceInfoScreen()
-                    2 -> ScheduleOfRacesScreen()
-                    3 -> TicketSelectionScreen(ticket, dataFile)
+                    1 -> RaceInfoScreen(onMenuClick = {scope.launch { pagerState.scrollToPage(0) }})
+                    2 -> ScheduleOfRacesScreen(onMenuClick = {scope.launch { pagerState.scrollToPage(0) }})
+                    3 -> TicketSelectionScreen(ticket, dataFile, onClick = {scope.launch { pagerState.scrollToPage(0) }})
                 }
             }
         }

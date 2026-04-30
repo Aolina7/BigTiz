@@ -47,7 +47,6 @@ data class RaceResultRow(
 
 @Composable
 fun RaceInfoScreen(
-    balanceRub: Int = 1450,
     results: List<RaceResultRow> = sampleRaceResults(),
     onMenuClick: () -> Unit = {},
     onBuyTicketClick: () -> Unit = {},

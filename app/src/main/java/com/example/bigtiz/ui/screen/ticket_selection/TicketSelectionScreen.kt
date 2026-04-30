@@ -73,21 +73,21 @@ val jsonConfig: Json = Json {
 }
 
 @Composable
-fun TicketSelectionScreen(tickets: Tickets, file: File) {
+fun TicketSelectionScreen(tickets: Tickets, file: File, onClick: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         DrawSurface()
-        ColumnsOfOvals(tickets, file)
+        ColumnsOfOvals(tickets, file, onClick)
     }
 }
 
 @Composable
-private fun ColumnsOfOvals(tickets: Tickets, file: File) {
+private fun ColumnsOfOvals(tickets: Tickets, file: File, onClick: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Column(verticalArrangement = Arrangement.spacedBy((10).dp)) {
-            DrawUpperOval()
+            DrawUpperOval(onClick)
             DrawOvalBelowUpper()
         }
         Spacer(Modifier.height(20.dp))
@@ -157,7 +157,7 @@ private fun DrawSurface() {
 
 
 @Composable
-private fun DrawUpperOval() {
+private fun DrawUpperOval(onClick: () -> Unit) {
 
         val list = listOf(Color.Gray, Color.Gray, Color.White)
 
@@ -176,7 +176,7 @@ private fun DrawUpperOval() {
                 style = TextStyle(brush = Brush.linearGradient(list)),
                 modifier = Modifier.align(Alignment.Center),
             )
-            DrawHamburgerMenu()
+            DrawHamburgerMenu(onClick)
 
         }
 
@@ -184,8 +184,8 @@ private fun DrawUpperOval() {
 
 
 @Composable
-private fun DrawHamburgerMenu() {
-    HamburgerMenuButton({})
+private fun DrawHamburgerMenu(onClick : () -> Unit) {
+    HamburgerMenuButton(onClick)
     MoneyIcon()
 }
 
