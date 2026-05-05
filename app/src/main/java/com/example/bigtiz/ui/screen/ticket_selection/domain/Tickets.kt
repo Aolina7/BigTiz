@@ -1,4 +1,4 @@
-package com.example.bigtiz.ui.screen.ticket_selection
+package com.example.bigtiz.ui.screen.ticket_selection.domain
 
 import android.annotation.SuppressLint
 import kotlinx.serialization.Serializable
