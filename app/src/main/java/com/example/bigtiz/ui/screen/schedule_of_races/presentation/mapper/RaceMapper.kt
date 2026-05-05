@@ -2,7 +2,6 @@ package com.example.bigtiz.ui.screen.schedule_of_races.presentation.mapper
 
 import com.example.bigtiz.ui.screen.schedule_of_races.domain.model.Race
 import com.example.bigtiz.ui.screen.schedule_of_races.presentation.ui.RaceUi
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 fun Race.toRaceUi(): RaceUi {

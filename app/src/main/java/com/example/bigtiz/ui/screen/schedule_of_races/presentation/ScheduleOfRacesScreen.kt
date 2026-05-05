@@ -29,12 +29,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bigtiz.R
 import com.example.bigtiz.ui.common.Header
+import com.example.bigtiz.ui.screen.schedule_of_races.data.ScheduleOfRacesRepositoryImpl
+import com.example.bigtiz.ui.screen.schedule_of_races.domain.usecase.GetRacesUseCase
+import com.example.bigtiz.ui.screen.schedule_of_races.presentation.mapper.toRaceUi
 
 @Composable
 fun ScheduleOfRacesScreen(
     onMenuClick: () -> Unit = {},
     onTicketClick: () -> Unit = {},
 ) {
+    val repository =  ScheduleOfRacesRepositoryImpl()
+    val getRacesUseCse = GetRacesUseCase(repository)
+    val races = getRacesUseCse().map {
+        it.toRaceUi()
+    }
+
     Surface(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.wp6),
@@ -49,27 +58,16 @@ fun ScheduleOfRacesScreen(
                 .padding(horizontal = 8.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            ScheduleHeader(
-                onMenuClick = onMenuClick,
-            )
-            CityRace(
-                dayMonth = "04.03",
-                year = "2026",
-                city = "Австралия",
-                onTicketClick = onTicketClick
-            )
-            CityRace(
-                dayMonth = "05.04",
-                year = "2026",
-                city = "Германия",
-                onTicketClick = onTicketClick
-            )
-            CityRace(
-                dayMonth = "04.05",
-                year = "2026",
-                city = "Турция",
-                onTicketClick = onTicketClick
-            )
+            ScheduleHeader(onMenuClick = onMenuClick)
+
+            races.forEach { race ->
+                CityRace(
+                    dayMonth = race.dayMonth,
+                    year = race.year,
+                    city = race.country,
+                    onTicketClick = onTicketClick
+                )
+            }
         }
     }
 }
@@ -80,6 +78,7 @@ private fun ScheduleHeader(
 ) {
     Header(onMenuClick)
 }
+
 @Composable
 private fun CityRace(
     dayMonth: String,
@@ -123,6 +122,7 @@ private fun CityRace(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
+
             TicketButton(onClick = onTicketClick)
         }
     }
