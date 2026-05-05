@@ -85,42 +85,27 @@ private fun ColumnsOfOvals(viewModel: ViewModel,tickets: Tickets, file: File, on
                 ticketsLeftInitial = tickets.FanZone,
                 price = viewModel.getFanZonePrice(),
                 selectedValue = viewModel.valueFan,
-                onIncrease = {
-                    viewModel.valueFan++
-                    viewModel.Total += viewModel.getFanZonePrice()
-                },
-                onDecrease = {
-                    viewModel.valueFan--
-                    viewModel.Total -= viewModel.getFanZonePrice()
-                })
+                onIncrease = {viewModel.onIncreaseFan(viewModel)},
+                onDecrease = {viewModel.onDecreaseFan(viewModel)}
+            )
 
             DrawZone(
                 title = "Vip Zone",
                 ticketsLeftInitial = tickets.VipZone,
-                price = viewModel.geVipZonePrice(),
+                price = viewModel.getVipZonePrice(),
                 selectedValue = viewModel.valueVip,
-                onIncrease = {
-                    viewModel.valueVip++
-                    viewModel.Total += viewModel.geVipZonePrice()
-                },
-                onDecrease = {
-                    viewModel.valueVip--
-                    viewModel.Total -= viewModel.geVipZonePrice()
-                })
+                onIncrease = {viewModel.onIncreaseVip(viewModel)},
+                onDecrease = {viewModel.onDecreaseVip(viewModel)}
+            )
 
             DrawZone(
                 title = "Premium Zone",
                 ticketsLeftInitial = tickets.PremiumZone,
                 price = viewModel.getPremiumZonePrice(),
                 selectedValue = viewModel.valuePrem,
-                onIncrease = {
-                    viewModel.valuePrem++
-                    viewModel.Total += viewModel.getPremiumZonePrice()
-                },
-                onDecrease = {
-                    viewModel.valuePrem--
-                    viewModel.Total -= viewModel.getPremiumZonePrice()
-                })
+                onIncrease = {viewModel.onIncreasePrem(viewModel)},
+                onDecrease = {viewModel.onDecreasePrem(viewModel)}
+            )
         }
 
         DrawTotal(viewModel)

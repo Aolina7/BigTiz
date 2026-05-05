@@ -16,11 +16,42 @@ class ViewModel {
     fun getFanZonePrice() : Int {
         return ticketUiState.FanZonePrice
     }
-    fun geVipZonePrice() : Int {
+    fun getVipZonePrice() : Int {
         return ticketUiState.VipZonePrice
     }
     fun getPremiumZonePrice() : Int {
         return ticketUiState.PremuimZonePrice
     }
+
+    fun onIncreaseFan(viewModel: ViewModel) {
+        viewModel.valueFan++
+        viewModel.Total += viewModel.getFanZonePrice()
+    }
+
+    fun onDecreaseFan(viewModel: ViewModel) {
+        viewModel.valueFan--
+        viewModel.Total -= viewModel.getFanZonePrice()
+    }
+
+    fun onIncreaseVip(viewModel: ViewModel) {
+        viewModel.valueVip++
+        viewModel.Total += viewModel.getVipZonePrice()
+    }
+
+    fun onDecreaseVip(viewModel: ViewModel) {
+        viewModel.valueVip--
+        viewModel.Total -= viewModel.getVipZonePrice()
+    }
+
+    fun onIncreasePrem(viewModel: ViewModel) {
+        viewModel.valuePrem++
+        viewModel.Total += viewModel.getPremiumZonePrice()
+    }
+
+    fun onDecreasePrem(viewModel: ViewModel) {
+        viewModel.valuePrem--
+        viewModel.Total -= viewModel.getPremiumZonePrice()
+    }
+
 
 }
