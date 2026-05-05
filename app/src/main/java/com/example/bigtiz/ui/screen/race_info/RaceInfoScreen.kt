@@ -35,6 +35,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bigtiz.R
+import com.example.bigtiz.presentation.model.RaceInfoUiModel
+import com.example.bigtiz.presentation.model.RaceResultRowUiModel
 import com.example.bigtiz.ui.common.HamburgerMenuButton
 import com.example.bigtiz.ui.common.Header
 
@@ -79,6 +81,39 @@ fun RaceInfoScreen(
 }
 
 @Composable
+fun RaceInfoScreen(
+    uiModel: RaceInfoUiModel,
+    onMenuClick: () -> Unit = {},
+    onBuyTicketClick: () -> Unit = {},
+) {
+    Surface(modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(id = R.drawable.wp6),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize(),
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            RaceInfoTopBar(
+                onMenuClick = onMenuClick,
+            )
+
+            ImageCard(imageResId = uiModel.imageResId)
+
+            BuyTicketButton(onClick = onBuyTicketClick)
+
+            ResultsTableUi(results = uiModel.resultRows)
+        }
+    }
+}
+
+@Composable
 private fun RaceInfoTopBar(
     onMenuClick: () -> Unit,
 ) {
@@ -86,7 +121,7 @@ private fun RaceInfoTopBar(
 }
 
 @Composable
-private fun ImageCard() {
+private fun ImageCard(imageResId: Int = R.drawable.team) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -96,7 +131,7 @@ private fun ImageCard() {
             .border(1.dp, Color.Black.copy(alpha = 0.35f), RoundedCornerShape(22.dp)),
     ) {
         Image(
-            painter = painterResource(id = R.drawable.team),
+            painter = painterResource(id = imageResId),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
@@ -145,6 +180,23 @@ private fun ResultsTable(results: List<RaceResultRow>) {
 }
 
 @Composable
+private fun ResultsTableUi(results: List<RaceResultRowUiModel>) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(18.dp))
+            .background(Color(0xFF1C1C1C).copy(alpha = 0.55f))
+            .padding(10.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        ResultsHeaderRow()
+        results.forEach { row ->
+            ResultsDataRowUi(row)
+        }
+    }
+}
+
+@Composable
 private fun ResultsHeaderRow() {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -160,6 +212,47 @@ private fun ResultsHeaderRow() {
 
 @Composable
 private fun ResultsDataRow(row: RaceResultRow) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .background(Color(0xFF0F0F0F).copy(alpha = 0.35f))
+            .padding(vertical = 8.dp, horizontal = 10.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        PositionBadge(row.position, Modifier.width(44.dp))
+
+        Text(
+            text = row.pilotName,
+            color = Color.White,
+            fontSize = 14.sp,
+            modifier = Modifier.weight(1f),
+            fontWeight = FontWeight.SemiBold,
+        )
+
+        Text(
+            text = row.timeDelta,
+            color = Color(0xFFA9FF9A),
+            fontSize = 13.sp,
+            modifier = Modifier.width(86.dp),
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.SemiBold,
+        )
+
+        Text(
+            text = row.points.toString(),
+            color = Color.White,
+            fontSize = 14.sp,
+            modifier = Modifier.width(52.dp),
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+        )
+    }
+}
+
+@Composable
+private fun ResultsDataRowUi(row: RaceResultRowUiModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
