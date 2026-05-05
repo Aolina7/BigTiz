@@ -51,43 +51,27 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
 
-var money by mutableIntStateOf(AppConstants.balance)
 
-const val FanZonePrice: Int = 100
-const val VipZonePrice: Int = 1400
-const val PremuimZonePrice: Int = 2500
 
-var Total by mutableIntStateOf(0)
-var valuePrem by mutableIntStateOf(0)
-var valueFan by mutableIntStateOf(0)
 
-var valueVip by mutableIntStateOf(0)
 
-@SuppressLint("UnsafeOptInUsageError")
-@Serializable
-data class Tickets(var FanZone: Int, var PremiumZone: Int, var VipZone: Int)
-
-val jsonConfig: Json = Json {
-    ignoreUnknownKeys = true
-    coerceInputValues = true
-}
 
 @Composable
-fun TicketSelectionScreen(tickets: Tickets, file: File, onClick: () -> Unit) {
+fun TicketSelectionScreen(viewModel: ViewModel, tickets: Tickets, file: File, onClick: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         DrawSurface()
-        ColumnsOfOvals(tickets, file, onClick)
+        ColumnsOfOvals(viewModel,tickets, file, onClick)
     }
 }
 
 @Composable
-private fun ColumnsOfOvals(tickets: Tickets, file: File, onClick: () -> Unit) {
+private fun ColumnsOfOvals(viewModel: ViewModel,tickets: Tickets, file: File, onClick: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Column(verticalArrangement = Arrangement.spacedBy((10).dp)) {
-            DrawUpperOval(onClick)
+            DrawUpperOval(viewModel,onClick)
             DrawOvalBelowUpper()
         }
         Spacer(Modifier.height(20.dp))
@@ -99,48 +83,48 @@ private fun ColumnsOfOvals(tickets: Tickets, file: File, onClick: () -> Unit) {
             DrawZone(
                 title = "Fan Zone",
                 ticketsLeftInitial = tickets.FanZone,
-                price = FanZonePrice,
-                selectedValue = valueFan,
+                price = viewModel.getFanZonePrice(),
+                selectedValue = viewModel.valueFan,
                 onIncrease = {
-                    valueFan++
-                    Total += FanZonePrice
+                    viewModel.valueFan++
+                    viewModel.Total += viewModel.getFanZonePrice()
                 },
                 onDecrease = {
-                    valueFan--
-                    Total -= FanZonePrice
+                    viewModel.valueFan--
+                    viewModel.Total -= viewModel.getFanZonePrice()
                 })
 
             DrawZone(
                 title = "Vip Zone",
                 ticketsLeftInitial = tickets.VipZone,
-                price = VipZonePrice,
-                selectedValue = valueVip,
+                price = viewModel.geVipZonePrice(),
+                selectedValue = viewModel.valueVip,
                 onIncrease = {
-                    valueVip++
-                    Total += VipZonePrice
+                    viewModel.valueVip++
+                    viewModel.Total += viewModel.geVipZonePrice()
                 },
                 onDecrease = {
-                    valueVip--
-                    Total -= VipZonePrice
+                    viewModel.valueVip--
+                    viewModel.Total -= viewModel.geVipZonePrice()
                 })
 
             DrawZone(
                 title = "Premium Zone",
                 ticketsLeftInitial = tickets.PremiumZone,
-                price = PremuimZonePrice,
-                selectedValue = valuePrem,
+                price = viewModel.getPremiumZonePrice(),
+                selectedValue = viewModel.valuePrem,
                 onIncrease = {
-                    valuePrem++
-                    Total += PremuimZonePrice
+                    viewModel.valuePrem++
+                    viewModel.Total += viewModel.getPremiumZonePrice()
                 },
                 onDecrease = {
-                    valuePrem--
-                    Total -= PremuimZonePrice
+                    viewModel.valuePrem--
+                    viewModel.Total -= viewModel.getPremiumZonePrice()
                 })
         }
 
-        DrawTotal()
-        DrawPayButton(tickets, file)
+        DrawTotal(viewModel)
+        DrawPayButton(viewModel,tickets, file)
     }
 }
 
@@ -157,7 +141,7 @@ private fun DrawSurface() {
 
 
 @Composable
-private fun DrawUpperOval(onClick: () -> Unit) {
+private fun DrawUpperOval(viewModel: ViewModel, onClick: () -> Unit) {
 
         val list = listOf(Color.Gray, Color.Gray, Color.White)
 
@@ -176,7 +160,7 @@ private fun DrawUpperOval(onClick: () -> Unit) {
                 style = TextStyle(brush = Brush.linearGradient(list)),
                 modifier = Modifier.align(Alignment.Center),
             )
-            DrawHamburgerMenu(onClick)
+            DrawHamburgerMenu(viewModel,onClick)
 
         }
 
@@ -184,13 +168,13 @@ private fun DrawUpperOval(onClick: () -> Unit) {
 
 
 @Composable
-private fun DrawHamburgerMenu(onClick : () -> Unit) {
+private fun DrawHamburgerMenu(viewModel: ViewModel, onClick : () -> Unit) {
     HamburgerMenuButton(onClick)
-    MoneyIcon()
+    MoneyIcon(viewModel)
 }
 
 @Composable
-private fun MoneyIcon() {
+private fun MoneyIcon(viewModel: ViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -211,7 +195,7 @@ private fun MoneyIcon() {
                     .background(Color.Gray),
             )
             Text(
-                text = "$money",
+                text = "${viewModel.money}",
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 fontSize = 16.sp,
@@ -359,7 +343,7 @@ fun DrawZone(
 }
 
 @Composable
-private fun DrawPayButton(tickets: Tickets, file: File) {
+private fun DrawPayButton(viewModel: ViewModel, tickets: Tickets, file: File) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -375,20 +359,20 @@ private fun DrawPayButton(tickets: Tickets, file: File) {
         ) {
             Button(
                 onClick = {
-                    if (Total <= money) {
-                        money -= Total
-                        AppConstants.balance -= Total
-                        tickets.PremiumZone -= valuePrem
-                        tickets.VipZone -= valueVip
-                        tickets.FanZone -= valueFan
+                    if (viewModel.Total <= viewModel.money) {
+                        viewModel.money -= viewModel.Total
+                        AppConstants.balance -= viewModel.Total
+                        tickets.PremiumZone -= viewModel.valuePrem
+                        tickets.VipZone -= viewModel.valueVip
+                        tickets.FanZone -= viewModel.valueFan
 
                         val newjson = Json.encodeToString(tickets)
                         file.writeText(newjson)
 
-                        valueFan = 0
-                        valueVip = 0
-                        valuePrem = 0
-                        Total = 0
+                        viewModel.valueFan = 0
+                        viewModel.valueVip = 0
+                        viewModel.valuePrem = 0
+                        viewModel.Total = 0
                     }
                 },
                 shape = RoundedCornerShape(20),
@@ -409,7 +393,7 @@ private fun DrawPayButton(tickets: Tickets, file: File) {
 
 
 @Composable
-private fun DrawTotal() {
+private fun DrawTotal(viewModel: ViewModel) {
     Box(
         modifier = Modifier
             .height(40.dp)
@@ -427,7 +411,7 @@ private fun DrawTotal() {
                 modifier = Modifier
                     .align(Alignment.CenterStart)
                     .padding(horizontal = 5.dp),
-                text = "Total: $Total ₽ ",
+                text = "Total: ${viewModel.Total} ₽ ",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
             )

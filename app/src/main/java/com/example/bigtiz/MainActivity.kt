@@ -17,8 +17,9 @@ import com.example.bigtiz.ui.screen.race_info.RaceInfoScreen
 import com.example.bigtiz.ui.screen.schedule_of_races.ScheduleOfRacesScreen
 import com.example.bigtiz.ui.screen.ticket_selection.TicketSelectionScreen
 import com.example.bigtiz.ui.screen.ticket_selection.Tickets
-import com.example.bigtiz.ui.screen.ticket_selection.jsonConfig
+import com.example.bigtiz.ui.screen.ticket_selection.ViewModel
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import java.io.File
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -34,9 +35,13 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
+        val jsonConfig: Json = Json {
+            ignoreUnknownKeys = true
+            coerceInputValues = true
+        }
         val jsonString  = dataFile.readText()
         val ticket = jsonConfig.decodeFromString<Tickets>(jsonString)
+        val viewModel : ViewModel = ViewModel()
 
         enableEdgeToEdge()
         setContent {
@@ -51,7 +56,7 @@ class MainActivity : ComponentActivity() {
                     0 -> PilotDetailsScreen()
                     1 -> RaceInfoScreen(onMenuClick = {scope.launch { pagerState.scrollToPage(0) }})
                     2 -> ScheduleOfRacesScreen(onMenuClick = {scope.launch { pagerState.scrollToPage(0) }})
-                    3 -> TicketSelectionScreen(ticket, dataFile, onClick = {scope.launch { pagerState.scrollToPage(0) }})
+                    3 -> TicketSelectionScreen(viewModel,ticket, dataFile, onClick = {scope.launch { pagerState.scrollToPage(0) }})
                 }
             }
         }
