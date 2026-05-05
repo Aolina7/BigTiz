@@ -31,44 +31,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bigtiz.R
+import com.example.bigtiz.ui.common.Header
 import com.example.bigtiz.ui.screen.race_info.presentation.model.RaceInfoUiModel
 import com.example.bigtiz.ui.screen.race_info.presentation.model.RaceResultRowUiModel
-import com.example.bigtiz.ui.common.Header
-
-
-
-@Composable
-fun RaceInfoScreen(
-    results: List<RaceResultRow> = sampleRaceResults(),
-    onMenuClick: () -> Unit = {},
-    onBuyTicketClick: () -> Unit = {},
-) {
-    Surface(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.wp6),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize(),
-        )
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
-            RaceInfoTopBar(
-                onMenuClick = onMenuClick,
-            )
-
-            ImageCard()
-
-            BuyTicketButton(onClick = onBuyTicketClick)
-
-            ResultsTable(results = results)
-        }
-    }
-}
 
 @Composable
 fun RaceInfoScreen(
@@ -90,28 +55,24 @@ fun RaceInfoScreen(
                 .padding(horizontal = 8.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            RaceInfoTopBar(
-                onMenuClick = onMenuClick,
-            )
+            RaceInfoTopBar(onMenuClick = onMenuClick)
 
             ImageCard(imageResId = uiModel.imageResId)
 
             BuyTicketButton(onClick = onBuyTicketClick)
 
-            ResultsTableUi(results = uiModel.resultRows)
+            ResultsTable(results = uiModel.resultRows)
         }
     }
 }
 
 @Composable
-private fun RaceInfoTopBar(
-    onMenuClick: () -> Unit,
-) {
+private fun RaceInfoTopBar(onMenuClick: () -> Unit) {
     Header(onMenuClick)
 }
 
 @Composable
-private fun ImageCard(imageResId: Int = R.drawable.team) {
+private fun ImageCard(imageResId: Int) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -153,7 +114,7 @@ private fun BuyTicketButton(onClick: () -> Unit) {
 }
 
 @Composable
-private fun ResultsTable(results: List<RaceResultRow>) {
+private fun ResultsTable(results: List<RaceResultRowUiModel>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -163,25 +124,9 @@ private fun ResultsTable(results: List<RaceResultRow>) {
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         ResultsHeaderRow()
-        results.forEach { row ->
-            ResultsDataRow(row)
-        }
-    }
-}
 
-@Composable
-private fun ResultsTableUi(results: List<RaceResultRowUiModel>) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(18.dp))
-            .background(Color(0xFF1C1C1C).copy(alpha = 0.55f))
-            .padding(10.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        ResultsHeaderRow()
         results.forEach { row ->
-            ResultsDataRowUi(row)
+            ResultsDataRow(row = row)
         }
     }
 }
@@ -193,56 +138,15 @@ private fun ResultsHeaderRow() {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        HeaderCell("Поз.", Modifier.width(44.dp))
-        HeaderCell("Пилот", Modifier.weight(1f))
-        HeaderCell("Время", Modifier.width(86.dp))
-        HeaderCell("Очки", Modifier.width(52.dp))
+        HeaderCell("Поз.", Modifier.width(44.dp))      // Позиция
+        HeaderCell("Пилот", Modifier.weight(1f))       // Имя пилота
+        HeaderCell("Время", Modifier.width(86.dp))     // Время
+        HeaderCell("Очки", Modifier.width(52.dp))      // Очки
     }
 }
 
 @Composable
-private fun ResultsDataRow(row: RaceResultRow) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color(0xFF0F0F0F).copy(alpha = 0.35f))
-            .padding(vertical = 8.dp, horizontal = 10.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        PositionBadge(row.position, Modifier.width(44.dp))
-
-        Text(
-            text = row.pilotName,
-            color = Color.White,
-            fontSize = 14.sp,
-            modifier = Modifier.weight(1f),
-            fontWeight = FontWeight.SemiBold,
-        )
-
-        Text(
-            text = row.timeDelta,
-            color = Color(0xFFA9FF9A),
-            fontSize = 13.sp,
-            modifier = Modifier.width(86.dp),
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.SemiBold,
-        )
-
-        Text(
-            text = row.points.toString(),
-            color = Color.White,
-            fontSize = 14.sp,
-            modifier = Modifier.width(52.dp),
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold,
-        )
-    }
-}
-
-@Composable
-private fun ResultsDataRowUi(row: RaceResultRowUiModel) {
+private fun ResultsDataRow(row: RaceResultRowUiModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -318,11 +222,3 @@ private fun PositionBadge(position: Int, modifier: Modifier = Modifier) {
         }
     }
 }
-
-private fun sampleRaceResults(): List<RaceResultRow> = listOf(
-    RaceResultRow(1, "Диана", "+13.722S", 18),
-    RaceResultRow(2, "Анита", "+15.27S", 15),
-    RaceResultRow(3, "Александр", "+15.754S", 12),
-    RaceResultRow(4, "Алина", "+23.479S", 10),
-)
-
