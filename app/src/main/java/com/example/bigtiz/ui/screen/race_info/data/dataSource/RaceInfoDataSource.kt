@@ -25,7 +25,7 @@ object RaceInfoDataSource {
                 ),
                 RaceResultRowStatic(
                     position = 3,
-                    pilotName = "Александр",
+                    pilotName = "Александер",
                     timeDelta = "+15.754S",
                     points = 12
                 ),
