@@ -17,9 +17,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,14 +38,53 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bigtiz.R
 import com.example.bigtiz.ui.common.Header
+import com.example.bigtiz.ui.screen.race_info.data.repository.RaceInfoRepositoryImpl
+import com.example.bigtiz.ui.screen.race_info.domain.repository.RaceInfoStaticRepository
+import com.example.bigtiz.ui.screen.race_info.domain.usecase.GetRaceInfoStaticUseCase
+import com.example.bigtiz.ui.screen.race_info.presentation.mapper.toUiModel
 import com.example.bigtiz.ui.screen.race_info.presentation.model.RaceInfoUiModel
 import com.example.bigtiz.ui.screen.race_info.presentation.model.RaceResultRowUiModel
 
+private val repository = RaceInfoRepositoryImpl()
+private val getRaceInfoUseCase = GetRaceInfoStaticUseCase(repository = repository)
+
 @Composable
 fun RaceInfoScreen(
-    uiModel: RaceInfoUiModel,
     onMenuClick: () -> Unit = {},
     onBuyTicketClick: () -> Unit = {},
+) {
+
+    var uiState by remember { mutableStateOf<RaceInfoUiState>(RaceInfoUiState.Loading) }
+
+    LaunchedEffect(Unit) {
+        val domainModel = getRaceInfoUseCase()
+        uiState = RaceInfoUiState.Success(domainModel.toUiModel())
+    }
+
+    when (val state = uiState) {
+        is RaceInfoUiState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+        is RaceInfoUiState.Success -> {
+            RaceInfoContent(
+                uiModel = state.uiModel,
+                onMenuClick = onMenuClick,
+                onBuyTicketClick = onBuyTicketClick
+            )
+        }
+    }
+}
+
+@Composable
+private fun RaceInfoContent(
+    uiModel: RaceInfoUiModel,
+    onMenuClick: () -> Unit,
+    onBuyTicketClick: () -> Unit,
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -138,10 +183,10 @@ private fun ResultsHeaderRow() {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        HeaderCell("Поз.", Modifier.width(44.dp))      // Позиция
-        HeaderCell("Пилот", Modifier.weight(1f))       // Имя пилота
-        HeaderCell("Время", Modifier.width(86.dp))     // Время
-        HeaderCell("Очки", Modifier.width(52.dp))      // Очки
+        HeaderCell("Поз.", Modifier.width(44.dp))
+        HeaderCell("Пилот", Modifier.weight(1f))
+        HeaderCell("Время", Modifier.width(86.dp))
+        HeaderCell("Очки", Modifier.width(52.dp))
     }
 }
 
@@ -221,4 +266,9 @@ private fun PositionBadge(position: Int, modifier: Modifier = Modifier) {
             )
         }
     }
+}
+
+sealed class RaceInfoUiState {
+    object Loading : RaceInfoUiState()
+    data class Success(val uiModel: RaceInfoUiModel) : RaceInfoUiState()
 }

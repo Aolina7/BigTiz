@@ -17,7 +17,6 @@ fun RaceInfoRoute(
     val uiModel = raceInfoData.toUiModel()
 
     RaceInfoScreen(
-        uiModel = uiModel,
         onMenuClick = onMenuClick,
         onBuyTicketClick = onBuyTicketClick,
     )

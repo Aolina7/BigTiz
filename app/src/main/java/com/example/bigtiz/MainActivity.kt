@@ -47,7 +47,10 @@ class MainActivity : ComponentActivity() {
             ) { page ->
                 when (page) {
                     0 -> PilotDetailsScreen()
-                    1 -> RaceInfoScreen(onMenuClick = {scope.launch { pagerState.scrollToPage(0) }})
+                    1 -> RaceInfoScreen(
+                        onMenuClick = { scope.launch { pagerState.scrollToPage(0) } },
+                        onBuyTicketClick = {} // сюда потом новигацию на экран Александера с покупкой билета
+                    )
                     2 -> ScheduleOfRacesScreen(onMenuClick = {scope.launch { pagerState.scrollToPage(0) }})
                     3 -> TicketSelectionScreen(ticket, dataFile, onClick = {scope.launch { pagerState.scrollToPage(0) }})
                 }
