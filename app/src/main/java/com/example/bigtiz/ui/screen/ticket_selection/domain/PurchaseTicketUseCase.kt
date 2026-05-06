@@ -3,7 +3,7 @@ package com.example.bigtiz.ui.screen.ticket_selection.domain
 class PurchaseTicketUseCase(
     private val repository: TicketRepository
 ) {
-    fun execute(
+    operator fun invoke(
         tickets: Tickets,
         fan: Int,
         vip: Int,

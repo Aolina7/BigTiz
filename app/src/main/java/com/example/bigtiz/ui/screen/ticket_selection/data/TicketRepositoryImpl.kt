@@ -20,6 +20,7 @@ class TicketRepositoryImpl(
     private val file: File
 ) : TicketRepository {
 
+
     override fun getTickets(): Tickets {
         if (!file.exists()) return Tickets(0, 0, 0)
 
@@ -38,4 +39,5 @@ class TicketRepositoryImpl(
         val json = Json.encodeToString(dto)
         file.writeText(json)
     }
+
 }

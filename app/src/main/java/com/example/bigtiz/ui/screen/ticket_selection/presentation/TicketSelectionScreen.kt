@@ -61,7 +61,7 @@ private fun ColumnsOfOvals(
                 title = "Fan Zone",
                 ticketsLeft = viewModel.tickets.FanZone,
                 price = viewModel.getFanPrice(),
-                selectedValue = viewModel.valueFan,
+                selectedValue = viewModel.uiState.fanSelected,
                 onIncrease = { viewModel.increaseFan() },
                 onDecrease = { viewModel.decreaseFan() }
             )
@@ -70,7 +70,7 @@ private fun ColumnsOfOvals(
                 title = "Vip Zone",
                 ticketsLeft = viewModel.tickets.VipZone,
                 price = viewModel.getVipPrice(),
-                selectedValue = viewModel.valueVip,
+                selectedValue = viewModel.uiState.vipSelected,
                 onIncrease = { viewModel.increaseVip() },
                 onDecrease = { viewModel.decreaseVip() }
             )
@@ -79,7 +79,7 @@ private fun ColumnsOfOvals(
                 title = "Premium Zone",
                 ticketsLeft = viewModel.tickets.PremiumZone,
                 price = viewModel.getPremPrice(),
-                selectedValue = viewModel.valuePrem,
+                selectedValue = viewModel.uiState.premSelected,
                 onIncrease = { viewModel.increasePrem() },
                 onDecrease = { viewModel.decreasePrem() }
             )
@@ -155,7 +155,7 @@ private fun MoneyIcon(viewModel: TicketViewModel) {
                     .background(Color.Gray),
             )
             Text(
-                text = "${viewModel.money}",
+                text = "${viewModel.uiState.money}",
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 fontSize = 16.sp,
