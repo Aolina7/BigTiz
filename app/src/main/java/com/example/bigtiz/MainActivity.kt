@@ -9,16 +9,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import com.example.bigtiz.ui.screen.pilot_details.PilotDetailsScreen
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.example.bigtiz.ui.screen.race_info.RaceInfoScreen
 import com.example.bigtiz.ui.screen.schedule_of_races.ScheduleOfRacesScreen
-import com.example.bigtiz.ui.screen.ticket_selection.TicketSelectionScreen
-import com.example.bigtiz.ui.screen.ticket_selection.Tickets
-import com.example.bigtiz.ui.screen.ticket_selection.jsonConfig
+import com.example.bigtiz.ui.screen.ticket_selection.data.TicketRepositoryImpl
+import com.example.bigtiz.ui.screen.ticket_selection.domain.PurchaseTicketUseCase
+import com.example.bigtiz.ui.screen.ticket_selection.presentation.TicketSelectionScreen
+import com.example.bigtiz.ui.screen.ticket_selection.domain.Tickets
+import com.example.bigtiz.ui.screen.ticket_selection.presentation.TicketViewModel
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import java.io.File
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -34,9 +35,19 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
+        val jsonConfig: Json = Json {
+            ignoreUnknownKeys = true
+            coerceInputValues = true
+        }
         val jsonString  = dataFile.readText()
         val ticket = jsonConfig.decodeFromString<Tickets>(jsonString)
+        val repository = TicketRepositoryImpl(dataFile)
+        val purchaseUseCase = PurchaseTicketUseCase(repository)
+
+        val viewModel = TicketViewModel(
+            purchaseUseCase = purchaseUseCase,
+            repository = repository
+        )
 
         enableEdgeToEdge()
         setContent {
@@ -51,7 +62,7 @@ class MainActivity : ComponentActivity() {
                     0 -> PilotDetailsScreen()
                     1 -> RaceInfoScreen(onMenuClick = {scope.launch { pagerState.scrollToPage(0) }})
                     2 -> ScheduleOfRacesScreen(onMenuClick = {scope.launch { pagerState.scrollToPage(0) }})
-                    3 -> TicketSelectionScreen(ticket, dataFile, onClick = {scope.launch { pagerState.scrollToPage(0) }})
+                    3 -> TicketSelectionScreen(viewModel, onClick = {scope.launch { pagerState.scrollToPage(0) }})
                 }
             }
         }
