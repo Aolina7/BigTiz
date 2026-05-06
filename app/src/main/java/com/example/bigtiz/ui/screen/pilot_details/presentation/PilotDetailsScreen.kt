@@ -303,7 +303,7 @@ private fun ButtonGoHome(
     onNavigateToHome: () -> Unit
 ) {
     Button(
-        onClick = {onNavigateToHome},
+        onClick = { onNavigateToHome() },
         modifier = Modifier
             .clip(RoundedCornerShape(50.dp))
             .height(40.dp)
