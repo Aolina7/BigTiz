@@ -1,7 +1,8 @@
-package com.example.bigtiz.ui.screen.pilot_details
+package com.example.bigtiz.ui.screen.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,10 +19,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,31 +36,42 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bigtiz.R
-import com.example.bigtiz.Racer
-import com.example.bigtiz.RacersData
-import com.example.bigtiz.ui.common.HamburgerMenuButton
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.foundation.clickable
-import androidx.compose.ui.text.font.FontStyle
 import com.example.bigtiz.ui.common.Header
+import com.example.bigtiz.domain.usecase.GetAllRacersUseCase
+import com.example.bigtiz.domain.usecase.GetRacerByIdUseCase
+import com.example.bigtiz.data.datasource.LocalRacerDataSource
+import com.example.bigtiz.data.repository.RacerRepositoryImpl
 
-val gradientList = listOf(Color.Gray, Color.Gray, Color.White)
+private val gradientList = listOf(Color.Gray, Color.Gray, Color.White)
+private val repository = RacerRepositoryImpl(LocalRacerDataSource())
+private val getAllRacersUseCase = GetAllRacersUseCase(repository)
+private val getRacerByIdUseCase = GetRacerByIdUseCase(repository)
 
 @Composable
 fun PilotDetailsScreen(
-    currentRacer: Racer = RacersData.diana
+    currentRacerId: Int = 1,
+    onNavigateToHome: () -> Unit = {}
 ) {
-
-    var selectedRacer by remember { mutableStateOf(currentRacer) }
+    var selectedRacerUi by remember { mutableStateOf<RacerUiModel?>(null) }
+    var isLoading by remember { mutableStateOf(true) }
     var isMenuVisible by remember { mutableStateOf(false) }
+    var allRacersUi by remember { mutableStateOf<List<RacerUiModel>>(emptyList()) }
+
+    LaunchedEffect(Unit) {
+        val racers = getAllRacersUseCase()
+        allRacersUi = PilotDetailsUiMapper.toUiModelList(racers)
+
+        val racer = getRacerByIdUseCase(currentRacerId)
+        selectedRacerUi = racer?.let { PilotDetailsUiMapper.toUiModel(it) }
+
+        isLoading = false
+    }
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -64,19 +81,30 @@ fun PilotDetailsScreen(
             modifier = Modifier.fillMaxSize(),
         )
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
-            PilotDetailsTopBar(
-                onMenuClick = {
-                    isMenuVisible = true
-                },
-            )
+        if (isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = Color.White)
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                PilotDetailsTopBar(
+                    onMenuClick = {
+                        isMenuVisible = true
+                    },
+                )
 
-            PhotoAndDescription(racer = selectedRacer)
+                selectedRacerUi?.let { racerUi ->
+                    PhotoAndDescription(racer = racerUi)
+                }
+            }
         }
 
         if (isMenuVisible) {
@@ -88,10 +116,12 @@ fun PilotDetailsScreen(
             ) {
                 NavigationMenu(
                     onClose = { isMenuVisible = false },
-                    onRacerClick = { racer ->
-                        selectedRacer = racer
+                    onRacerClick = { racerUi ->
+                        selectedRacerUi = racerUi
                         isMenuVisible = false
-                    }
+                    },
+                    allRacers = allRacersUi,
+                    onNavigateToHome = onNavigateToHome
                 )
             }
         }
@@ -99,7 +129,7 @@ fun PilotDetailsScreen(
 }
 
 @Composable
-private fun RacerBio(racer: Racer) {
+private fun RacerBio(racer: RacerUiModel) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -124,7 +154,7 @@ private fun RacerBio(racer: Racer) {
                 color = Color.White.copy(alpha = 0.5f)
             )
             Text(
-                text = "${racer.age} лет",
+                text = racer.formattedAge,
                 fontSize = 16.sp,
                 color = Color.White.copy(alpha = 0.7f)
             )
@@ -134,14 +164,14 @@ private fun RacerBio(racer: Racer) {
                 color = Color.White.copy(alpha = 0.5f)
             )
             Text(
-                text = "${racer.wins} подиумов",
+                text = racer.formattedWins,
                 fontSize = 16.sp,
                 color = Color.Green
             )
         }
 
         Text(
-            text = "«${racer.quote}»",
+            text = racer.formattedQuote,
             fontSize = 18.sp,
             fontStyle = FontStyle.Italic,
             color = Color.White.copy(alpha = 0.9f),
@@ -164,9 +194,8 @@ private fun PilotDetailsTopBar(
     Header(onMenuClick)
 }
 
-
 @Composable
-private fun PhotoAndDescription(racer: Racer) {
+private fun PhotoAndDescription(racer: RacerUiModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -209,7 +238,7 @@ private fun PhotoAndDescription(racer: Racer) {
                         .padding(20.dp)
                 ) {
                     Text(
-                        text = "${racer.name}",
+                        text = racer.name,
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
@@ -230,7 +259,7 @@ private fun PhotoAndDescription(racer: Racer) {
 }
 
 @Composable
-private fun RacerImage(racer: Racer) {
+private fun RacerImage(racer: RacerUiModel) {
     Image(
         painter = painterResource(id = racer.imageResId),
         contentDescription = racer.name,
@@ -238,6 +267,7 @@ private fun RacerImage(racer: Racer) {
         contentScale = ContentScale.Crop
     )
 }
+
 @Composable
 private fun ScreenDimming() {
     Box(
@@ -251,7 +281,7 @@ private fun ScreenDimming() {
 
 @Composable
 private fun PhotoAsButton(
-    racer: Racer,
+    racer: RacerUiModel,
     onClick: () -> Unit
 ) {
     Button(
@@ -267,10 +297,13 @@ private fun PhotoAsButton(
         RacerImage(racer)
     }
 }
+
 @Composable
-private fun ButtonGoHome() {
+private fun ButtonGoHome(
+    onNavigateToHome: () -> Unit
+) {
     Button(
-        onClick = { print("переход на главную страницу") },
+        onClick = { onNavigateToHome() },
         modifier = Modifier
             .clip(RoundedCornerShape(50.dp))
             .height(40.dp)
@@ -311,7 +344,9 @@ private fun ButtonGoHome() {
 @Composable
 private fun NavigationMenu(
     onClose: () -> Unit,
-    onRacerClick: (Racer) -> Unit
+    onRacerClick: (RacerUiModel) -> Unit,
+    allRacers: List<RacerUiModel>,
+    onNavigateToHome: () -> Unit
 ) {
     ScreenDimming()
     Box(
@@ -341,7 +376,7 @@ private fun NavigationMenu(
 
                 Spacer(modifier = Modifier.height(5.dp))
 
-                for (racer in RacersData.allRacers) {
+                for (racer in allRacers) {
                     PhotoAsButton(
                         racer = racer,
                         onClick = { onRacerClick(racer) }
@@ -349,14 +384,8 @@ private fun NavigationMenu(
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
-                ButtonGoHome()
+                ButtonGoHome(onNavigateToHome = onNavigateToHome)
             }
         }
     }
 }
-
-
-
-
-
-

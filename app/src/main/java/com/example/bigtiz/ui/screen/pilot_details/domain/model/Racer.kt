@@ -1,8 +1,4 @@
-package com.example.bigtiz
-
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
-import androidx.compose.runtime.Composable
+package com.example.bigtiz.domain.model
 
 data class Racer(
     val id: Int,
