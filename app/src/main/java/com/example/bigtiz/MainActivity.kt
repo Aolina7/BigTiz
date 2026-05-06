@@ -48,7 +48,11 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxSize()
             ) { page ->
                 when (page) {
-                    0 -> PilotDetailsScreen()
+                    0 -> PilotDetailsScreen(
+                        currentRacerId = 1,
+                        onNavigateToHome = {
+                            println("переход на главную страницу")
+                        })
                     1 -> RaceInfoScreen(onMenuClick = {scope.launch { pagerState.scrollToPage(0) }})
                     2 -> ScheduleOfRacesScreen(onMenuClick = {scope.launch { pagerState.scrollToPage(0) }})
                     3 -> TicketSelectionScreen(ticket, dataFile, onClick = {scope.launch { pagerState.scrollToPage(0) }})

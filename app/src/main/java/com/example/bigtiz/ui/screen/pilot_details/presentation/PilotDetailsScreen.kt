@@ -56,7 +56,8 @@ private val getRacerByIdUseCase = GetRacerByIdUseCase(repository)
 
 @Composable
 fun PilotDetailsScreen(
-    currentRacerId: Int = 1
+    currentRacerId: Int = 1,
+    onNavigateToHome: () -> Unit = {}
 ) {
     var selectedRacerUi by remember { mutableStateOf<RacerUiModel?>(null) }
     var isLoading by remember { mutableStateOf(true) }
@@ -120,7 +121,8 @@ fun PilotDetailsScreen(
                         selectedRacerUi = racerUi
                         isMenuVisible = false
                     },
-                    allRacers = allRacersUi
+                    allRacers = allRacersUi,
+                    onNavigateToHome = onNavigateToHome
                 )
             }
         }
@@ -298,9 +300,11 @@ private fun PhotoAsButton(
 }
 
 @Composable
-private fun ButtonGoHome() {
+private fun ButtonGoHome(
+    onNavigateToHome: () -> Unit
+) {
     Button(
-        onClick = { println("переход на главную страницу") },
+        onClick = {onNavigateToHome},
         modifier = Modifier
             .clip(RoundedCornerShape(50.dp))
             .height(40.dp)
@@ -342,7 +346,8 @@ private fun ButtonGoHome() {
 private fun NavigationMenu(
     onClose: () -> Unit,
     onRacerClick: (RacerUiModel) -> Unit,
-    allRacers: List<RacerUiModel>
+    allRacers: List<RacerUiModel>,
+    onNavigateToHome: () -> Unit
 ) {
     ScreenDimming()
     Box(
@@ -380,7 +385,7 @@ private fun NavigationMenu(
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
-                ButtonGoHome()
+                ButtonGoHome(onNavigateToHome = onNavigateToHome)
             }
         }
     }
