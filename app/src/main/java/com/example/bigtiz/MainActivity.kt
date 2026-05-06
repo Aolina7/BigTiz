@@ -8,11 +8,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import com.example.bigtiz.ui.screen.pilot_details.PilotDetailsScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import com.example.bigtiz.ui.screen.race_info.RaceInfoScreen
+import com.example.bigtiz.ui.screen.race_info.presentation.screen.RaceInfoScreen
 import com.example.bigtiz.ui.screen.schedule_of_races.ScheduleOfRacesScreen
 import com.example.bigtiz.ui.screen.ticket_selection.TicketSelectionScreen
 import com.example.bigtiz.ui.screen.ticket_selection.Tickets
@@ -48,12 +49,18 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxSize()
             ) { page ->
                 when (page) {
+
+                    1 -> RaceInfoScreen(
+                        onMenuClick = { scope.launch { pagerState.scrollToPage(0) } },
+                        onBuyTicketClick = {} // сюда потом новигацию на экран Александера с покупкой билета
+                    )
+
                     0 -> PilotDetailsScreen(
                         currentRacerId = 1,
                         onNavigateToHome = {
                             println("переход на главную страницу")
                         })
-                    1 -> RaceInfoScreen(onMenuClick = {scope.launch { pagerState.scrollToPage(0) }})
+                    
                     2 -> ScheduleOfRacesScreen(onMenuClick = {scope.launch { pagerState.scrollToPage(0) }})
                     3 -> TicketSelectionScreen(ticket, dataFile, onClick = {scope.launch { pagerState.scrollToPage(0) }})
                 }

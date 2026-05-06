@@ -1,4 +1,4 @@
-package com.example.bigtiz.ui.screen.race_info
+package com.example.bigtiz.ui.screen.race_info.presentation.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,38 +17,74 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bigtiz.R
-import com.example.bigtiz.ui.common.HamburgerMenuButton
 import com.example.bigtiz.ui.common.Header
+import com.example.bigtiz.ui.screen.race_info.data.repository.RaceInfoRepositoryImpl
+import com.example.bigtiz.ui.screen.race_info.domain.repository.RaceInfoStaticRepository
+import com.example.bigtiz.ui.screen.race_info.domain.usecase.GetRaceInfoStaticUseCase
+import com.example.bigtiz.ui.screen.race_info.presentation.mapper.toUiModel
+import com.example.bigtiz.ui.screen.race_info.presentation.model.RaceInfoUiModel
+import com.example.bigtiz.ui.screen.race_info.presentation.model.RaceResultRowUiModel
 
-data class RaceResultRow(
-    val position: Int,
-    val pilotName: String,
-    val timeDelta: String,
-    val points: Int,
-)
+private val repository = RaceInfoRepositoryImpl()
+private val getRaceInfoUseCase = GetRaceInfoStaticUseCase(repository = repository)
 
 @Composable
 fun RaceInfoScreen(
-    results: List<RaceResultRow> = sampleRaceResults(),
     onMenuClick: () -> Unit = {},
     onBuyTicketClick: () -> Unit = {},
+) {
+
+    var uiState by remember { mutableStateOf<RaceInfoUiState>(RaceInfoUiState.Loading) }
+
+    LaunchedEffect(Unit) {
+        val domainModel = getRaceInfoUseCase()
+        uiState = RaceInfoUiState.Success(domainModel.toUiModel())
+    }
+
+    when (val state = uiState) {
+        is RaceInfoUiState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+        is RaceInfoUiState.Success -> {
+            RaceInfoContent(
+                uiModel = state.uiModel,
+                onMenuClick = onMenuClick,
+                onBuyTicketClick = onBuyTicketClick
+            )
+        }
+    }
+}
+
+@Composable
+private fun RaceInfoContent(
+    uiModel: RaceInfoUiModel,
+    onMenuClick: () -> Unit,
+    onBuyTicketClick: () -> Unit,
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -65,28 +100,24 @@ fun RaceInfoScreen(
                 .padding(horizontal = 8.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            RaceInfoTopBar(
-                onMenuClick = onMenuClick,
-            )
+            RaceInfoTopBar(onMenuClick = onMenuClick)
 
-            ImageCard()
+            ImageCard(imageResId = uiModel.imageResId)
 
             BuyTicketButton(onClick = onBuyTicketClick)
 
-            ResultsTable(results = results)
+            ResultsTable(results = uiModel.resultRows)
         }
     }
 }
 
 @Composable
-private fun RaceInfoTopBar(
-    onMenuClick: () -> Unit,
-) {
+private fun RaceInfoTopBar(onMenuClick: () -> Unit) {
     Header(onMenuClick)
 }
 
 @Composable
-private fun ImageCard() {
+private fun ImageCard(imageResId: Int) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -96,7 +127,7 @@ private fun ImageCard() {
             .border(1.dp, Color.Black.copy(alpha = 0.35f), RoundedCornerShape(22.dp)),
     ) {
         Image(
-            painter = painterResource(id = R.drawable.team),
+            painter = painterResource(id = imageResId),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
@@ -128,7 +159,7 @@ private fun BuyTicketButton(onClick: () -> Unit) {
 }
 
 @Composable
-private fun ResultsTable(results: List<RaceResultRow>) {
+private fun ResultsTable(results: List<RaceResultRowUiModel>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -138,8 +169,9 @@ private fun ResultsTable(results: List<RaceResultRow>) {
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         ResultsHeaderRow()
+
         results.forEach { row ->
-            ResultsDataRow(row)
+            ResultsDataRow(row = row)
         }
     }
 }
@@ -159,7 +191,7 @@ private fun ResultsHeaderRow() {
 }
 
 @Composable
-private fun ResultsDataRow(row: RaceResultRow) {
+private fun ResultsDataRow(row: RaceResultRowUiModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -236,10 +268,7 @@ private fun PositionBadge(position: Int, modifier: Modifier = Modifier) {
     }
 }
 
-private fun sampleRaceResults(): List<RaceResultRow> = listOf(
-    RaceResultRow(1, "Диана", "+13.722S", 18),
-    RaceResultRow(2, "Анита", "+15.27S", 15),
-    RaceResultRow(3, "Александр", "+15.754S", 12),
-    RaceResultRow(4, "Алина", "+23.479S", 10),
-)
-
+sealed class RaceInfoUiState {
+    object Loading : RaceInfoUiState()
+    data class Success(val uiModel: RaceInfoUiModel) : RaceInfoUiState()
+}

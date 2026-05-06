@@ -44,6 +44,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bigtiz.R
+import com.example.bigtiz.domain.model.TicketCategory
+import com.example.bigtiz.presentation.model.TicketSelectionUiModel
+import com.example.bigtiz.ui.common.Header
 import com.example.bigtiz.ui.common.AppConstants
 import com.example.bigtiz.ui.common.HamburgerMenuButton
 import kotlinx.serialization.Serializable
@@ -77,6 +80,144 @@ fun TicketSelectionScreen(tickets: Tickets, file: File, onClick: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         DrawSurface()
         ColumnsOfOvals(tickets, file, onClick)
+    }
+}
+
+@Composable
+fun TicketSelectionScreen(
+    uiModel: TicketSelectionUiModel,
+    onMenuClick: () -> Unit = {},
+    onDecrease: (TicketCategory) -> Unit = {},
+    onIncrease: (TicketCategory) -> Unit = {},
+    onPurchase: () -> Unit = {},
+) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        DrawSurface()
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Header(onMenuClick)
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(18.dp))
+                    .background(Color(0xFF1C1C1C).copy(alpha = 0.55f))
+                    .padding(horizontal = 14.dp, vertical = 12.dp),
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(
+                        text = uiModel.raceTitle,
+                        color = Color.White,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Black,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    Text(
+                        text = uiModel.raceLocation,
+                        color = Color.White.copy(alpha = 0.8f),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(18.dp))
+                    .background(Color(0xFF1C1C1C).copy(alpha = 0.55f))
+                    .padding(10.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                uiModel.zones.forEach { zone ->
+                    DrawZone(
+                        title = zone.title,
+                        ticketsLeftInitial = zone.ticketsLeft,
+                        price = zone.priceRub,
+                        selectedValue = zone.selectedCount,
+                        onIncrease = { onIncrease(zone.category) },
+                        onDecrease = { onDecrease(zone.category) },
+                    )
+                }
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(18.dp))
+                    .background(Color(0xFF1C1C1C).copy(alpha = 0.55f))
+                    .padding(horizontal = 14.dp, vertical = 12.dp),
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text(
+                            text = "Баланс",
+                            color = Color.White.copy(alpha = 0.8f),
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                        Text(
+                            text = "${uiModel.balanceRub} ₽",
+                            color = Color.White,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Black,
+                        )
+                    }
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                        horizontalAlignment = Alignment.End,
+                    ) {
+                        Text(
+                            text = "Итого",
+                            color = Color.White.copy(alpha = 0.8f),
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                        Text(
+                            text = "${uiModel.totalRub} ₽",
+                            color = Color(0xFFA9FF9A),
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Black,
+                        )
+                    }
+                }
+            }
+
+            Button(
+                onClick = onPurchase,
+                enabled = uiModel.canPurchase,
+                shape = RoundedCornerShape(18.dp),
+                contentPadding = PaddingValues(0.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(86.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF6B6B6B).copy(alpha = 0.7f),
+                    contentColor = Color(0xFFE0E0E0),
+                    disabledContainerColor = Color(0xFF3A3A3A).copy(alpha = 0.7f),
+                    disabledContentColor = Color(0xFF9B9B9B),
+                ),
+            ) {
+                Text(
+                    text = "Purchase",
+                    fontSize = 26.sp,
+                    fontWeight = FontWeight.Black,
+                    textAlign = TextAlign.Center,
+                )
+            }
+        }
     }
 }
 
