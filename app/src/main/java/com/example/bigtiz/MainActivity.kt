@@ -8,17 +8,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import com.example.bigtiz.ui.screen.pilot_details.PilotDetailsScreen
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.example.bigtiz.ui.screen.race_info.presentation.screen.RaceInfoScreen
-import com.example.bigtiz.ui.screen.schedule_of_races.ScheduleOfRacesScreen
 import com.example.bigtiz.ui.screen.ticket_selection.TicketSelectionScreen
 import com.example.bigtiz.ui.screen.ticket_selection.Tickets
 import com.example.bigtiz.ui.screen.ticket_selection.jsonConfig
 import com.example.bigtiz.ui.screen.presentation.PilotDetailsScreen
+import com.example.bigtiz.ui.screen.schedule_of_races.presentation.ScheduleOfRacesScreen
 import kotlinx.coroutines.launch
 import java.io.File
 
