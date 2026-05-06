@@ -43,7 +43,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bigtiz.R
 import com.example.bigtiz.ui.common.Header
-import com.example.bigtiz.domain.model.Racer
 import com.example.bigtiz.domain.usecase.GetAllRacersUseCase
 import com.example.bigtiz.domain.usecase.GetRacerByIdUseCase
 import com.example.bigtiz.data.datasource.LocalRacerDataSource
