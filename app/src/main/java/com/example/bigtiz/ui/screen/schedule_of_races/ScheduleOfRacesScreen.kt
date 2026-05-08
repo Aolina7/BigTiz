@@ -1,4 +1,4 @@
-package com.example.bigtiz.ui.screen.schedule_of_races.presentation
+package com.example.bigtiz.ui.screen.schedule_of_races
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
