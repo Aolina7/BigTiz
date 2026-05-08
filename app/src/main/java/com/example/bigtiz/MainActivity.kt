@@ -12,7 +12,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.example.bigtiz.ui.screen.presentation.PilotDetailsScreen
 import com.example.bigtiz.ui.screen.race_info.presentation.screen.RaceInfoScreen
-import com.example.bigtiz.ui.screen.schedule_of_races.presentation.ScheduleOfRacesScreen
+import com.example.bigtiz.ui.screen.schedule_of_races.ScheduleOfRacesScreen
+import com.example.bigtiz.ui.screen.schedule_of_races.data.ScheduleOfRacesRepositoryImpl
+import com.example.bigtiz.ui.screen.schedule_of_races.domain.usecase.GetRacesUseCase
+import com.example.bigtiz.ui.screen.schedule_of_races.presentation.viewmodel.ScheduleOfRacesViewModel
 import com.example.bigtiz.ui.screen.ticket_selection.TicketSelectionScreen
 import com.example.bigtiz.ui.screen.ticket_selection.data.TicketRepositoryImpl
 import com.example.bigtiz.ui.screen.ticket_selection.domain.PurchaseTicketsUseCase
@@ -40,6 +43,13 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        val repositorySchedule = ScheduleOfRacesRepositoryImpl()
+
+        val getRacesUseCase = GetRacesUseCase(repositorySchedule)
+
+        val scheduleOfRacesViewModel = ScheduleOfRacesViewModel(
+            racesUseCase = getRacesUseCase
+        )
 
 
         val repository = TicketRepositoryImpl(dataFile)
@@ -93,7 +103,7 @@ class MainActivity : ComponentActivity() {
 
                             onBuyTicketClick = {
                                 scope.launch {
-                                    pagerState.scrollToPage(3)
+                                    pagerState.scrollToPage(2)
                                 }
                             }
                         )
@@ -102,9 +112,15 @@ class MainActivity : ComponentActivity() {
                     2 -> {
 
                         ScheduleOfRacesScreen(
+                            viewModel = scheduleOfRacesViewModel,
                             onMenuClick = {
                                 scope.launch {
                                     pagerState.scrollToPage(0)
+                                }
+                            },
+                            onTicketClick = {
+                                scope.launch {
+                                    pagerState.scrollToPage(3)
                                 }
                             }
                         )
