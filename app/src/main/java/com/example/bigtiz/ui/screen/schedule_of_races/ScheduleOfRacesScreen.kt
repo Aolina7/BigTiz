@@ -32,6 +32,7 @@ import com.example.bigtiz.ui.common.Header
 import com.example.bigtiz.ui.screen.schedule_of_races.data.ScheduleOfRacesRepositoryImpl
 import com.example.bigtiz.ui.screen.schedule_of_races.domain.usecase.GetRacesUseCase
 import com.example.bigtiz.ui.screen.schedule_of_races.presentation.mapper.toRaceUi
+import com.example.bigtiz.ui.screen.schedule_of_races.presentation.viewmodel.ScheduleOfRacesViewModel
 
 @Composable
 fun ScheduleOfRacesScreen(
@@ -39,10 +40,8 @@ fun ScheduleOfRacesScreen(
     onTicketClick: () -> Unit = {},
 ) {
     val repository =  ScheduleOfRacesRepositoryImpl()
-    val getRacesUseCse = GetRacesUseCase(repository)
-    val races = getRacesUseCse().map {
-        it.toRaceUi()
-    }
+    val getRacesUseCase = GetRacesUseCase(repository)
+    val viewModel = ScheduleOfRacesViewModel(getRacesUseCase)
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -60,7 +59,7 @@ fun ScheduleOfRacesScreen(
         ) {
             ScheduleHeader(onMenuClick = onMenuClick)
 
-            races.forEach { race ->
+            viewModel.races.forEach { race ->
                 CityRace(
                     dayMonth = race.dayMonth,
                     year = race.year,

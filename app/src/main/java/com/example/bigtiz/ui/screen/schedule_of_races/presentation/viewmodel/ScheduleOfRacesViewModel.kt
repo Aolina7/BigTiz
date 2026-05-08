@@ -1,7 +1,6 @@
 package com.example.bigtiz.ui.screen.schedule_of_races.presentation.viewmodel
 
 import androidx.compose.runtime.toMutableStateList
-import com.example.bigtiz.ui.screen.schedule_of_races.domain.repository.ScheduleOfRacesRepository
 import com.example.bigtiz.ui.screen.schedule_of_races.domain.usecase.GetRacesUseCase
 import com.example.bigtiz.ui.screen.schedule_of_races.presentation.mapper.toRaceUi
 
