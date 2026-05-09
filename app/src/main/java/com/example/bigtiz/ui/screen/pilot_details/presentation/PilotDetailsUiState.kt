@@ -4,9 +4,11 @@ import com.example.bigtiz.domain.model.Racer
 
 data class PilotDetailsUiState(
     val currentRacer: RacerUiModel? = null,
+    val allRacers: List<RacerUiModel> = emptyList(),
     val isLoading: Boolean = false,
     val isMenuVisible: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val shouldNavigateToHome: Boolean = false
 )
 
 data class RacerUiModel(
