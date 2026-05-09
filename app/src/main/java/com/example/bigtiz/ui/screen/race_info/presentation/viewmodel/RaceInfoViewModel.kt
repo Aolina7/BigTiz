@@ -23,9 +23,20 @@ class RaceInfoViewModel(
 
     private fun loadRaceInfo() {
         viewModelScope.launch {
-            // Имитация загрузки, если нужно
-            val domainModel = getRaceInfoUseCase()
-            _uiState.value = RaceInfoUiState.Success(domainModel.toUiModel())
+            try {
+                val domainModel = getRaceInfoUseCase()
+                _uiState.value = RaceInfoUiState.Success(domainModel.toUiModel())
+            } catch (e: Exception) {
+                _uiState.value = RaceInfoUiState.Error(e.message ?: "Unknown error")
+            }
         }
+    }
+
+    fun onMenuClick() {
+        // Логика при клике на меню
+    }
+
+    fun onBuyTicketClick() {
+        // Логика при клике на покупку билета
     }
 }

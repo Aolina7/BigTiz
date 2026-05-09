@@ -11,7 +11,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.example.bigtiz.ui.screen.presentation.PilotDetailsScreen
-import com.example.bigtiz.ui.screen.race_info.presentation.screen.RaceInfoScreen
+import com.example.bigtiz.ui.screen.race_info.presentation.route.RaceInfoRoute  // ← импортируем Route
 import com.example.bigtiz.ui.screen.schedule_of_races.presentation.ScheduleOfRacesScreen
 import com.example.bigtiz.ui.screen.ticket_selection.TicketSelectionScreen
 import com.example.bigtiz.ui.screen.ticket_selection.data.TicketRepositoryImpl
@@ -31,24 +31,15 @@ class MainActivity : ComponentActivity() {
         val dataFile = File(filesDir, "DataBase.json")
 
         if (!dataFile.exists()) {
-
             assets.open("DataBase.json").use { input ->
-
                 dataFile.outputStream().use { output ->
-
                     input.copyTo(output)
                 }
             }
         }
 
-
         val repository = TicketRepositoryImpl(dataFile)
-
-
-        val purchaseTicketsUseCase =
-            PurchaseTicketsUseCase(repository)
-
-
+        val purchaseTicketsUseCase = PurchaseTicketsUseCase(repository)
         val ticketViewModel = TicketViewModel(
             repository = repository,
             purchaseUseCase = purchaseTicketsUseCase
@@ -72,10 +63,8 @@ class MainActivity : ComponentActivity() {
                 when (page) {
 
                     0 -> {
-
                         PilotDetailsScreen(
                             currentRacerId = 1,
-
                             onNavigateToHome = {
                                 println("переход на главную страницу")
                             }
@@ -83,14 +72,13 @@ class MainActivity : ComponentActivity() {
                     }
 
                     1 -> {
-
-                        RaceInfoScreen(
+                        // Используем RaceInfoRoute вместо RaceInfoScreen
+                        RaceInfoRoute(
                             onMenuClick = {
                                 scope.launch {
                                     pagerState.scrollToPage(0)
                                 }
                             },
-
                             onBuyTicketClick = {
                                 scope.launch {
                                     pagerState.scrollToPage(3)
@@ -100,7 +88,6 @@ class MainActivity : ComponentActivity() {
                     }
 
                     2 -> {
-
                         ScheduleOfRacesScreen(
                             onMenuClick = {
                                 scope.launch {
@@ -111,10 +98,8 @@ class MainActivity : ComponentActivity() {
                     }
 
                     3 -> {
-
                         TicketSelectionScreen(
                             viewModel = ticketViewModel,
-
                             onClick = {
                                 scope.launch {
                                     pagerState.scrollToPage(0)
