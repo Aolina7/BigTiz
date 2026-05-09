@@ -1,4 +1,4 @@
-package com.example.bigtiz.ui.screen.presentation
+package com.example.bigtiz.ui.screen.pilot_details.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,10 +24,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,36 +39,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bigtiz.R
 import com.example.bigtiz.ui.common.Header
-import com.example.bigtiz.domain.usecase.GetAllRacersUseCase
-import com.example.bigtiz.domain.usecase.GetRacerByIdUseCase
-import com.example.bigtiz.data.datasource.LocalRacerDataSource
-import com.example.bigtiz.data.repository.RacerRepositoryImpl
 
 private val gradientList = listOf(Color.Gray, Color.Gray, Color.White)
-private val repository = RacerRepositoryImpl(LocalRacerDataSource())
-private val getAllRacersUseCase = GetAllRacersUseCase(repository)
-private val getRacerByIdUseCase = GetRacerByIdUseCase(repository)
 
 @Composable
 fun PilotDetailsScreen(
-    currentRacerId: Int = 1,
+    racerId: Int = 1,
+    viewModel: PilotDetailsViewModel = viewModel(
+        factory = PilotDetailsViewModelFactory(racerId)
+    ),
     onNavigateToHome: () -> Unit = {}
 ) {
-    var selectedRacerUi by remember { mutableStateOf<RacerUiModel?>(null) }
-    var isLoading by remember { mutableStateOf(true) }
-    var isMenuVisible by remember { mutableStateOf(false) }
-    var allRacersUi by remember { mutableStateOf<List<RacerUiModel>>(emptyList()) }
+    val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
-        val racers = getAllRacersUseCase()
-        allRacersUi = PilotDetailsUiMapper.toUiModelList(racers)
-
-        val racer = getRacerByIdUseCase(currentRacerId)
-        selectedRacerUi = racer?.let { PilotDetailsUiMapper.toUiModel(it) }
-
-        isLoading = false
+    LaunchedEffect(uiState.shouldNavigateToHome) {
+        if (uiState.shouldNavigateToHome) {
+            onNavigateToHome()
+            viewModel.onNavigationHandled()
+        }
     }
 
     Surface(modifier = Modifier.fillMaxSize()) {
@@ -81,47 +70,69 @@ fun PilotDetailsScreen(
             modifier = Modifier.fillMaxSize(),
         )
 
-        if (isLoading) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(color = Color.White)
+        when {
+            uiState.error != null -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = uiState.error ?: "Ошибка",
+                        color = Color.Red,
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
             }
-        } else {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-            ) {
-                PilotDetailsTopBar(
-                    onMenuClick = {
-                        isMenuVisible = true
-                    },
-                )
+            uiState.isLoading && uiState.currentRacer == null -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = Color.White)
+                }
+            }
+            else -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    PilotDetailsTopBar(
+                        onMenuClick = {
+                            viewModel.onEvent(PilotDetailsEvent.ToggleMenu)
+                        }
+                    )
 
-                selectedRacerUi?.let { racerUi ->
-                    PhotoAndDescription(racer = racerUi)
+                    uiState.currentRacer?.let { racerUi ->
+                        PhotoAndDescription(racer = racerUi)
+                    }
                 }
             }
         }
 
-        if (isMenuVisible) {
+        if (uiState.isMenuVisible) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black.copy(alpha = 0.5f))
-                    .clickable { isMenuVisible = false }
+                    .clickable {
+                        viewModel.onEvent(PilotDetailsEvent.HideMenu)
+                    }
             ) {
                 NavigationMenu(
-                    onClose = { isMenuVisible = false },
-                    onRacerClick = { racerUi ->
-                        selectedRacerUi = racerUi
-                        isMenuVisible = false
+                    onClose = {
+                        viewModel.onEvent(PilotDetailsEvent.HideMenu)
                     },
-                    allRacers = allRacersUi,
-                    onNavigateToHome = onNavigateToHome
+                    onRacerClick = { racerUi ->
+                        viewModel.onEvent(PilotDetailsEvent.SelectRacer(racerUi))
+                    },
+                    onNavigateToHome = {
+                        viewModel.onEvent(PilotDetailsEvent.NavigateToHome)
+                    },
+                    allRacers = uiState.allRacers
                 )
             }
         }
@@ -303,7 +314,7 @@ private fun ButtonGoHome(
     onNavigateToHome: () -> Unit
 ) {
     Button(
-        onClick = { onNavigateToHome() },
+        onClick = onNavigateToHome,
         modifier = Modifier
             .clip(RoundedCornerShape(50.dp))
             .height(40.dp)
@@ -345,8 +356,8 @@ private fun ButtonGoHome(
 private fun NavigationMenu(
     onClose: () -> Unit,
     onRacerClick: (RacerUiModel) -> Unit,
-    allRacers: List<RacerUiModel>,
-    onNavigateToHome: () -> Unit
+    onNavigateToHome: () -> Unit,
+    allRacers: List<RacerUiModel>
 ) {
     ScreenDimming()
     Box(
