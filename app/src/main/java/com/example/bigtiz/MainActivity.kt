@@ -17,6 +17,7 @@ import com.example.bigtiz.ui.screen.ticket_selection.TicketSelectionScreen
 import com.example.bigtiz.ui.screen.ticket_selection.data.TicketRepositoryImpl
 import com.example.bigtiz.ui.screen.ticket_selection.domain.PurchaseTicketsUseCase
 import com.example.bigtiz.ui.screen.ticket_selection.presentation.TicketViewModel
+import com.example.bigtiz.ui.screen.welcome.presentation.WelcomeScreen
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -72,24 +73,32 @@ class MainActivity : ComponentActivity() {
                 when (page) {
 
                     0 -> {
+                        WelcomeScreen {
+                            scope.launch {
+                                pagerState.scrollToPage(2)
+                            }
+                        }
+                    }
+
+                    1 -> {
 
                         PilotDetailsScreen(
                             racerId = 1,
 
                             onNavigateToHome = {
                                 scope.launch {
-                                    pagerState.scrollToPage(1)
+                                    pagerState.scrollToPage(2)
                                 }
                             }
                         )
                     }
 
-                    1 -> {
+                    2 -> {
 
                         RaceInfoScreen(
                             onMenuClick = {
                                 scope.launch {
-                                    pagerState.scrollToPage(0)
+                                    pagerState.scrollToPage(2)
                                 }
                             },
 
@@ -101,25 +110,25 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    2 -> {
+                    3 -> {
 
                         ScheduleOfRacesScreen(
                             onMenuClick = {
                                 scope.launch {
-                                    pagerState.scrollToPage(0)
+                                    pagerState.scrollToPage(1)
                                 }
                             }
                         )
                     }
 
-                    3 -> {
+                    4 -> {
 
                         TicketSelectionScreen(
                             viewModel = ticketViewModel,
 
                             onClick = {
                                 scope.launch {
-                                    pagerState.scrollToPage(0)
+                                    pagerState.scrollToPage(1)
                                 }
                             }
                         )
