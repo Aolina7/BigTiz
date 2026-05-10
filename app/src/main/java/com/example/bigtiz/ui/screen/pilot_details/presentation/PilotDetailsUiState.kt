@@ -4,6 +4,7 @@ import com.example.bigtiz.domain.model.Racer
 
 data class PilotDetailsUiState(
     val currentRacer: RacerUiModel? = null,
+    val allRacers: List<RacerUiModel> = emptyList(),
     val isLoading: Boolean = false,
     val isMenuVisible: Boolean = false,
     val error: String? = null
@@ -20,15 +21,11 @@ data class RacerUiModel(
     val wins: Int,
     val quote: String
 ) {
-    val formattedAge: String
-        get() = "$age лет"
-
-    val formattedWins: String
-        get() = "$wins подиумов"
-
-    val formattedQuote: String
-        get() = "«$quote»"
+    val formattedAge: String get() = "$age лет"
+    val formattedWins: String get() = "$wins подиумов"
+    val formattedQuote: String get() = "«$quote»"
 }
+
 
 fun Racer.toUiModel(): RacerUiModel {
     return RacerUiModel(

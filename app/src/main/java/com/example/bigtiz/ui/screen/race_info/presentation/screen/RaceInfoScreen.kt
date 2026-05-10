@@ -21,11 +21,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,30 +33,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bigtiz.R
 import com.example.bigtiz.ui.common.Header
-import com.example.bigtiz.ui.screen.race_info.data.repository.RaceInfoRepositoryImpl
-import com.example.bigtiz.ui.screen.race_info.domain.repository.RaceInfoStaticRepository
-import com.example.bigtiz.ui.screen.race_info.domain.usecase.GetRaceInfoStaticUseCase
-import com.example.bigtiz.ui.screen.race_info.presentation.mapper.toUiModel
 import com.example.bigtiz.ui.screen.race_info.presentation.model.RaceInfoUiModel
 import com.example.bigtiz.ui.screen.race_info.presentation.model.RaceResultRowUiModel
 
-private val repository = RaceInfoRepositoryImpl()
-private val getRaceInfoUseCase = GetRaceInfoStaticUseCase(repository = repository)
-
 @Composable
 fun RaceInfoScreen(
+    uiState: RaceInfoUiState,
     onMenuClick: () -> Unit = {},
     onBuyTicketClick: () -> Unit = {},
 ) {
-
-    var uiState by remember { mutableStateOf<RaceInfoUiState>(RaceInfoUiState.Loading) }
-
-    LaunchedEffect(Unit) {
-        val domainModel = getRaceInfoUseCase()
-        uiState = RaceInfoUiState.Success(domainModel.toUiModel())
-    }
-
-    when (val state = uiState) {
+    when (uiState) {
         is RaceInfoUiState.Loading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -72,10 +53,23 @@ fun RaceInfoScreen(
         }
         is RaceInfoUiState.Success -> {
             RaceInfoContent(
-                uiModel = state.uiModel,
+                uiModel = uiState.uiModel,
                 onMenuClick = onMenuClick,
                 onBuyTicketClick = onBuyTicketClick
             )
+        }
+        is RaceInfoUiState.Error -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Ошибка: ${uiState.message}",
+                    color = Color.Red,
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }
@@ -266,9 +260,4 @@ private fun PositionBadge(position: Int, modifier: Modifier = Modifier) {
             )
         }
     }
-}
-
-sealed class RaceInfoUiState {
-    object Loading : RaceInfoUiState()
-    data class Success(val uiModel: RaceInfoUiModel) : RaceInfoUiState()
 }

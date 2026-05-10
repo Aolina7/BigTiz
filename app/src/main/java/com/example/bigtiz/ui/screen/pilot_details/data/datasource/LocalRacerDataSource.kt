@@ -10,7 +10,7 @@ class LocalRacerDataSource {
             Racer(
                 id = 1,
                 name = "Диана",
-                fullName = "Диана Муаметзянова",
+                fullName = "Диана Мухаметзянова",
                 imageResId = R.drawable.diana,
                 bio = "Диана родилась и выросла в Нурлате." +
                         " Перед каждым заездом она слушает татарские народные " +

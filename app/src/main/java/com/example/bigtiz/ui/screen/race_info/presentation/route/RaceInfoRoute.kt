@@ -1,23 +1,37 @@
 package com.example.bigtiz.ui.screen.race_info.presentation.route
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.bigtiz.ui.screen.race_info.data.repository.RaceInfoRepositoryImpl
 import com.example.bigtiz.ui.screen.race_info.domain.usecase.GetRaceInfoStaticUseCase
-import com.example.bigtiz.ui.screen.race_info.presentation.mapper.toUiModel
 import com.example.bigtiz.ui.screen.race_info.presentation.screen.RaceInfoScreen
+import com.example.bigtiz.ui.screen.race_info.presentation.viewmodel.RaceInfoViewModel
+import com.example.bigtiz.ui.screen.race_info.presentation.viewmodel.RaceInfoViewModelFactory
 
 @Composable
 fun RaceInfoRoute(
-    getRaceInfoUseCase: GetRaceInfoStaticUseCase,
     onMenuClick: () -> Unit = {},
     onBuyTicketClick: () -> Unit = {},
 ) {
-    val raceInfoData = remember(getRaceInfoUseCase) { getRaceInfoUseCase() }
+    val repository = RaceInfoRepositoryImpl()
+    val getRaceInfoUseCase = GetRaceInfoStaticUseCase(repository = repository)
+    val viewModel: RaceInfoViewModel = viewModel(
+        factory = RaceInfoViewModelFactory(getRaceInfoUseCase)
+    )
 
-    val uiModel = raceInfoData.toUiModel()
+    val uiState by viewModel.uiState.collectAsState()
 
     RaceInfoScreen(
-        onMenuClick = onMenuClick,
-        onBuyTicketClick = onBuyTicketClick,
+        uiState = uiState,
+        onMenuClick = {
+            viewModel.onMenuClick()
+            onMenuClick()
+        },
+        onBuyTicketClick = {
+            viewModel.onBuyTicketClick()
+            onBuyTicketClick()
+        }
     )
 }

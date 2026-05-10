@@ -11,8 +11,8 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
-import com.example.bigtiz.ui.screen.presentation.PilotDetailsScreen
-import com.example.bigtiz.ui.screen.race_info.presentation.screen.RaceInfoScreen
+import com.example.bigtiz.ui.screen.pilot_details.presentation.PilotDetailsScreen
+import com.example.bigtiz.ui.screen.race_info.presentation.route.RaceInfoRoute
 import com.example.bigtiz.ui.screen.schedule_of_races.ScheduleOfRacesScreen
 import com.example.bigtiz.ui.screen.schedule_of_races.data.ScheduleOfRacesRepositoryImpl
 import com.example.bigtiz.ui.screen.schedule_of_races.domain.usecase.GetRacesUseCase
@@ -54,10 +54,7 @@ class MainActivity : ComponentActivity() {
 
         val repository = TicketRepositoryImpl(dataFile)
 
-
-        val purchaseTicketsUseCase =
-            PurchaseTicketsUseCase(repository)
-
+        val purchaseTicketsUseCase = PurchaseTicketsUseCase(repository)
 
         val ticketViewModel = TicketViewModel(
             repository = repository,
@@ -84,17 +81,19 @@ class MainActivity : ComponentActivity() {
                     0 -> {
 
                         PilotDetailsScreen(
-                            currentRacerId = 1,
+                            racerId = 1,
 
                             onNavigateToHome = {
-                                println("переход на главную страницу")
+                                scope.launch {
+                                    pagerState.scrollToPage(1)
+                                }
                             }
                         )
                     }
 
                     1 -> {
 
-                        RaceInfoScreen(
+                        RaceInfoRoute(
                             onMenuClick = {
                                 scope.launch {
                                     pagerState.scrollToPage(0)
