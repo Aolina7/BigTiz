@@ -47,7 +47,7 @@ private val gradientList = listOf(Color.Gray, Color.Gray, Color.White)
 
 @Composable
 fun PilotDetailsScreen(
-    racerId: Int = 1,
+    racerId: Int,
     viewModel: PilotDetailsViewModel = viewModel(
         factory = PilotDetailsViewModelFactory(racerId)
     ),
