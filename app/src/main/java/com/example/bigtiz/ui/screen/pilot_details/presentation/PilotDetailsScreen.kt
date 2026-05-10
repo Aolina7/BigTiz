@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bigtiz.R
 import com.example.bigtiz.ui.common.Header
@@ -54,12 +55,18 @@ fun PilotDetailsScreen(
     onNavigateToHome: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        viewModel.navigationEvent.collect { event ->
+        viewModel.event.collect { event ->
             when (event) {
-                is NavigationEvent.NavigateToHome -> {
-                    onNavigateToHome()
+                is ViewModelEvent.NavigateToHome -> onNavigateToHome()
+                is ViewModelEvent.ShowError -> {
+                    android.widget.Toast.makeText(
+                        context,
+                        event.message,
+                        android.widget.Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
@@ -79,13 +86,12 @@ fun PilotDetailsScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = uiState.error ?: "Ошибка",
-                        color = Color.Red,
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(16.dp)
-                    )
+                    Column {
+                        Text(text = uiState.error ?: "Ошибка", color = Color.Red)
+                        Button(onClick = { viewModel.onClearError() }) {
+                            Text("Закрыть")
+                        }
+                    }
                 }
             }
             uiState.isLoading && uiState.currentRacer == null -> {
@@ -104,9 +110,7 @@ fun PilotDetailsScreen(
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     PilotDetailsTopBar(
-                        onMenuClick = {
-                            viewModel.onEvent(PilotDetailsEvent.ToggleMenu)
-                        }
+                        onMenuClick = { viewModel.onMenuClick() }
                     )
 
                     uiState.currentRacer?.let { racerUi ->
@@ -121,20 +125,12 @@ fun PilotDetailsScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black.copy(alpha = 0.5f))
-                    .clickable {
-                        viewModel.onEvent(PilotDetailsEvent.HideMenu)
-                    }
+                    .clickable { viewModel.onCloseMenu() }
             ) {
                 NavigationMenu(
-                    onClose = {
-                        viewModel.onEvent(PilotDetailsEvent.HideMenu)
-                    },
-                    onRacerClick = { racerUi ->
-                        viewModel.onEvent(PilotDetailsEvent.SelectRacer(racerUi))
-                    },
-                    onNavigateToHome = {
-                        viewModel.onEvent(PilotDetailsEvent.NavigateToHome)
-                    },
+                    onClose = { viewModel.onCloseMenu() },
+                    onRacerClick = { racer -> viewModel.onRacerClick(racer) },
+                    onNavigateToHome = { viewModel.onNavigateToHome() },
                     allRacers = uiState.allRacers
                 )
             }

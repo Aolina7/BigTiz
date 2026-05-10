@@ -22,10 +22,8 @@ class PilotDetailsViewModel(
     private val _uiState = MutableStateFlow(PilotDetailsUiState())
     val uiState: StateFlow<PilotDetailsUiState> = _uiState.asStateFlow()
 
-    private val _navigationEvent = MutableSharedFlow<NavigationEvent>()
-    val navigationEvent = _navigationEvent.asSharedFlow()
-
-    private var allRacers: List<Racer> = emptyList()
+    private val _event = MutableSharedFlow<ViewModelEvent>()
+    val event = _event.asSharedFlow()
 
     init {
         loadAllRacers()
@@ -35,14 +33,12 @@ class PilotDetailsViewModel(
     private fun loadAllRacers() {
         viewModelScope.launch {
             try {
-                allRacers = getAllRacersUseCase()
+                val racers = getAllRacersUseCase()
                 _uiState.update { state ->
-                    state.copy(allRacers = allRacers.toUiModelList())
+                    state.copy(allRacers = racers.toUiModelList())
                 }
             } catch (e: Exception) {
-                _uiState.update { state ->
-                    state.copy(error = "Ошибка загрузки списка гонщиков: ${e.message}")
-                }
+                _event.emit(ViewModelEvent.ShowError("Ошибка загрузки списка: ${e.message}"))
             }
         }
     }
@@ -60,68 +56,42 @@ class PilotDetailsViewModel(
                     )
                 }
             } catch (e: Exception) {
-                _uiState.update { state ->
-                    state.copy(
-                        isLoading = false,
-                        error = "Ошибка загрузки данных гонщика: ${e.message}"
-                    )
-                }
+                _uiState.update { state -> state.copy(isLoading = false) }
+                _event.emit(ViewModelEvent.ShowError("Ошибка загрузки гонщика: ${e.message}"))
             }
         }
     }
 
-    fun onEvent(event: PilotDetailsEvent) {
-        when (event) {
-            is PilotDetailsEvent.SelectRacer -> {
-                selectRacer(event.racer)
-            }
-            is PilotDetailsEvent.ToggleMenu -> {
-                toggleMenu()
-            }
-            is PilotDetailsEvent.HideMenu -> {
-                hideMenu()
-            }
-            is PilotDetailsEvent.NavigateToHome -> {
-                navigateToHome()
-            }
-        }
+    fun onMenuClick() {
+        _uiState.update { state -> state.copy(isMenuVisible = true) }
     }
 
-    private fun selectRacer(racer: RacerUiModel) {
+    fun onCloseMenu() {
+        _uiState.update { state -> state.copy(isMenuVisible = false) }
+    }
+
+    fun onRacerClick(racer: RacerUiModel) {
         _uiState.update { state ->
             state.copy(
                 currentRacer = racer,
                 isMenuVisible = false
             )
         }
+        loadRacerById(racer.id)
     }
 
-    private fun toggleMenu() {
-        _uiState.update { state ->
-            state.copy(isMenuVisible = !state.isMenuVisible)
-        }
-    }
-
-    private fun hideMenu() {
-        _uiState.update { state ->
-            state.copy(isMenuVisible = false)
-        }
-    }
-
-    private fun navigateToHome() {
+    fun onNavigateToHome() {
         viewModelScope.launch {
-            _navigationEvent.emit(NavigationEvent.NavigateToHome)
+            _event.emit(ViewModelEvent.NavigateToHome)
         }
+    }
+
+    fun onClearError() {
+        _uiState.update { state -> state.copy(error = null) }
     }
 }
 
-sealed class PilotDetailsEvent {
-    data class SelectRacer(val racer: RacerUiModel) : PilotDetailsEvent()
-    object ToggleMenu : PilotDetailsEvent()
-    object HideMenu : PilotDetailsEvent()
-    object NavigateToHome : PilotDetailsEvent()
-}
-
-sealed class NavigationEvent {
-    object NavigateToHome : NavigationEvent()
+sealed class ViewModelEvent {
+    object NavigateToHome : ViewModelEvent()
+    data class ShowError(val message: String) : ViewModelEvent()
 }

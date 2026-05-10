@@ -21,15 +21,11 @@ data class RacerUiModel(
     val wins: Int,
     val quote: String
 ) {
-    val formattedAge: String
-        get() = "$age лет"
-
-    val formattedWins: String
-        get() = "$wins подиумов"
-
-    val formattedQuote: String
-        get() = "«$quote»"
+    val formattedAge: String get() = "$age лет"
+    val formattedWins: String get() = "$wins подиумов"
+    val formattedQuote: String get() = "«$quote»"
 }
+
 
 fun Racer.toUiModel(): RacerUiModel {
     return RacerUiModel(
