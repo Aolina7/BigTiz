@@ -1,4 +1,4 @@
-package com.example.bigtiz.ui.screen.schedule_of_races.presentation
+package com.example.bigtiz.ui.screen.schedule_of_races
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,22 +27,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bigtiz.R
 import com.example.bigtiz.ui.common.Header
 import com.example.bigtiz.ui.screen.schedule_of_races.data.ScheduleOfRacesRepositoryImpl
 import com.example.bigtiz.ui.screen.schedule_of_races.domain.usecase.GetRacesUseCase
 import com.example.bigtiz.ui.screen.schedule_of_races.presentation.mapper.toRaceUi
+import com.example.bigtiz.ui.screen.schedule_of_races.presentation.viewmodel.ScheduleOfRacesViewModel
+import com.example.bigtiz.ui.screen.schedule_of_races.presentation.viewmodel.ScheduleOfRacesViewModelFactory
 
 @Composable
 fun ScheduleOfRacesScreen(
+    viewModel: ScheduleOfRacesViewModel,
     onMenuClick: () -> Unit = {},
     onTicketClick: () -> Unit = {},
 ) {
-    val repository =  ScheduleOfRacesRepositoryImpl()
-    val getRacesUseCse = GetRacesUseCase(repository)
-    val races = getRacesUseCse().map {
-        it.toRaceUi()
-    }
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -60,7 +59,7 @@ fun ScheduleOfRacesScreen(
         ) {
             ScheduleHeader(onMenuClick = onMenuClick)
 
-            races.forEach { race ->
+            viewModel.races.forEach { race ->
                 CityRace(
                     dayMonth = race.dayMonth,
                     year = race.year,
