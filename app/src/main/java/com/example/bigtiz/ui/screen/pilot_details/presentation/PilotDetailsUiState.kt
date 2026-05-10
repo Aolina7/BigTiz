@@ -7,8 +7,7 @@ data class PilotDetailsUiState(
     val allRacers: List<RacerUiModel> = emptyList(),
     val isLoading: Boolean = false,
     val isMenuVisible: Boolean = false,
-    val error: String? = null,
-    val shouldNavigateToHome: Boolean = false
+    val error: String? = null
 )
 
 data class RacerUiModel(

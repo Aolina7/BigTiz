@@ -55,10 +55,13 @@ fun PilotDetailsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(uiState.shouldNavigateToHome) {
-        if (uiState.shouldNavigateToHome) {
-            onNavigateToHome()
-            viewModel.onNavigationHandled()
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvent.collect { event ->
+            when (event) {
+                is NavigationEvent.NavigateToHome -> {
+                    onNavigateToHome()
+                }
+            }
         }
     }
 
