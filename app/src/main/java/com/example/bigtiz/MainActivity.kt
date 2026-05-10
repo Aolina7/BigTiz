@@ -43,13 +43,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        val repositorySchedule = ScheduleOfRacesRepositoryImpl()
-
-        val getRacesUseCase = GetRacesUseCase(repositorySchedule)
-
-        val scheduleOfRacesViewModel = ScheduleOfRacesViewModel(
-            racesUseCase = getRacesUseCase
-        )
 
 
         val repository = TicketRepositoryImpl(dataFile)
@@ -112,7 +105,6 @@ class MainActivity : ComponentActivity() {
                     2 -> {
 
                         ScheduleOfRacesScreen(
-                            viewModel = scheduleOfRacesViewModel,
                             onMenuClick = {
                                 scope.launch {
                                     pagerState.scrollToPage(0)
