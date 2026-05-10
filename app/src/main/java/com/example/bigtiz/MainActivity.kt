@@ -10,8 +10,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import com.example.bigtiz.ui.screen.pilot_details.presentation.PilotDetailsScreen
-import com.example.bigtiz.ui.screen.race_info.presentation.screen.RaceInfoScreen
+import com.example.bigtiz.ui.screen.presentation.PilotDetailsScreen
+import com.example.bigtiz.ui.screen.race_info.presentation.route.RaceInfoRoute
 import com.example.bigtiz.ui.screen.schedule_of_races.presentation.ScheduleOfRacesScreen
 import com.example.bigtiz.ui.screen.ticket_selection.TicketSelectionScreen
 import com.example.bigtiz.ui.screen.ticket_selection.data.TicketRepositoryImpl
@@ -41,13 +41,9 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-
         val repository = TicketRepositoryImpl(dataFile)
 
-
-        val purchaseTicketsUseCase =
-            PurchaseTicketsUseCase(repository)
-
+        val purchaseTicketsUseCase = PurchaseTicketsUseCase(repository)
 
         val ticketViewModel = TicketViewModel(
             repository = repository,
@@ -86,13 +82,12 @@ class MainActivity : ComponentActivity() {
 
                     1 -> {
 
-                        RaceInfoScreen(
+                        RaceInfoRoute(
                             onMenuClick = {
                                 scope.launch {
                                     pagerState.scrollToPage(0)
                                 }
                             },
-
                             onBuyTicketClick = {
                                 scope.launch {
                                     pagerState.scrollToPage(3)
@@ -116,7 +111,6 @@ class MainActivity : ComponentActivity() {
 
                         TicketSelectionScreen(
                             viewModel = ticketViewModel,
-
                             onClick = {
                                 scope.launch {
                                     pagerState.scrollToPage(0)
