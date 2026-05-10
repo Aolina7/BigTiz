@@ -10,12 +10,14 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModelProvider
 import com.example.bigtiz.ui.screen.presentation.PilotDetailsScreen
 import com.example.bigtiz.ui.screen.race_info.presentation.screen.RaceInfoScreen
 import com.example.bigtiz.ui.screen.schedule_of_races.ScheduleOfRacesScreen
 import com.example.bigtiz.ui.screen.schedule_of_races.data.ScheduleOfRacesRepositoryImpl
 import com.example.bigtiz.ui.screen.schedule_of_races.domain.usecase.GetRacesUseCase
 import com.example.bigtiz.ui.screen.schedule_of_races.presentation.viewmodel.ScheduleOfRacesViewModel
+import com.example.bigtiz.ui.screen.schedule_of_races.presentation.viewmodel.ScheduleOfRacesViewModelFactory
 import com.example.bigtiz.ui.screen.ticket_selection.TicketSelectionScreen
 import com.example.bigtiz.ui.screen.ticket_selection.data.TicketRepositoryImpl
 import com.example.bigtiz.ui.screen.ticket_selection.domain.PurchaseTicketsUseCase
@@ -43,6 +45,11 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        val repositorySchedule = ScheduleOfRacesRepositoryImpl()
+        val getRacesUseCase = GetRacesUseCase(repositorySchedule)
+        val factory = ScheduleOfRacesViewModelFactory(getRacesUseCase)
+        val scheduleOfRacesViewModel = ViewModelProvider(this, factory).get(ScheduleOfRacesViewModel::class.java)
 
 
         val repository = TicketRepositoryImpl(dataFile)
@@ -105,6 +112,7 @@ class MainActivity : ComponentActivity() {
                     2 -> {
 
                         ScheduleOfRacesScreen(
+                            viewModel = scheduleOfRacesViewModel,
                             onMenuClick = {
                                 scope.launch {
                                     pagerState.scrollToPage(0)

@@ -38,13 +38,10 @@ import com.example.bigtiz.ui.screen.schedule_of_races.presentation.viewmodel.Sch
 
 @Composable
 fun ScheduleOfRacesScreen(
+    viewModel: ScheduleOfRacesViewModel,
     onMenuClick: () -> Unit = {},
     onTicketClick: () -> Unit = {},
 ) {
-    val viewModel: ScheduleOfRacesViewModel = viewModel(
-        factory = ScheduleOfRacesViewModelFactory()
-    )
-
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Image(
