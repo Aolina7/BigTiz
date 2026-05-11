@@ -70,10 +70,12 @@ class MainActivity : ComponentActivity() {
                     0 -> {
 
                         PilotDetailsScreen(
-                            currentRacerId = 1,
+                            racerId = 1,
 
                             onNavigateToHome = {
-                                println("переход на главную страницу")
+                                scope.launch {
+                                    pagerState.scrollToPage(1)
+                                }
                             }
                         )
                     }
