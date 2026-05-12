@@ -32,6 +32,9 @@ class RaceInfoViewModel(
         }
     }
 
+    fun onMenuClick() {
+        // Логика при клике на меню
+    }
 
     fun onBuyTicketClick() {
         // Логика при клике на покупку билета
