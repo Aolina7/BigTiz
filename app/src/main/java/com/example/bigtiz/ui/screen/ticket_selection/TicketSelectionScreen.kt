@@ -37,13 +37,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bigtiz.R
 import com.example.bigtiz.ui.common.HamburgerMenuButton
+import com.example.bigtiz.ui.screen.purchase_success.ViewModel.PurchaseSuccessViewModel
 import com.example.bigtiz.ui.screen.ticket_selection.domain.TicketPrices
 import com.example.bigtiz.ui.screen.ticket_selection.presentation.TicketViewModel
+
+
 
 @Composable
 fun TicketSelectionScreen(
     viewModel: TicketViewModel,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    purchaseSuccessViewModel: PurchaseSuccessViewModel,
+    onPurchaseSuccess: () -> Unit
 ) {
 
     val state = viewModel.uiState
@@ -119,9 +124,10 @@ fun TicketSelectionScreen(
             DrawTotal(viewModel.total)
 
             DrawPayButton(
-                onPurchase = {
-                    viewModel.purchase()
-                }
+                viewModel = viewModel,
+                purchaseSuccessViewModel = purchaseSuccessViewModel,
+                onPurchaseSuccess = onPurchaseSuccess
+
             )
         }
     }
@@ -400,8 +406,12 @@ private fun DrawZone(
 
 @Composable
 private fun DrawPayButton(
-    onPurchase: () -> Unit
+    viewModel: TicketViewModel,
+    purchaseSuccessViewModel: PurchaseSuccessViewModel,
+    onPurchaseSuccess: () -> Unit
 ) {
+
+    val state = viewModel.uiState
 
     Box(
         modifier = Modifier
@@ -419,7 +429,27 @@ private fun DrawPayButton(
         ) {
 
             Button(
-                onClick = onPurchase,
+                onClick = {
+
+                    val fan = state.fanSelected
+                    val vip = state.vipSelected
+                    val premium = state.premiumSelected
+                    val total = viewModel.total
+
+                    val success = viewModel.purchase()
+
+                    if (success) {
+
+                        purchaseSuccessViewModel.setPurchaseInfo(
+                            fan = fan,
+                            vip = vip,
+                            premium = premium,
+                            total = total
+                        )
+
+                        onPurchaseSuccess()
+                    }
+                },
 
                 shape = RoundedCornerShape(20),
 

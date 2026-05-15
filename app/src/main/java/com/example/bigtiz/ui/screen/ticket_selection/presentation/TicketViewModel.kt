@@ -99,9 +99,11 @@ class TicketViewModel(
         }
     }
 
-    fun purchase() {
+    fun purchase(): Boolean {
 
-        if (total > uiState.money) return
+        if (total > uiState.money) {
+            return false
+        }
 
         val currentTickets = Tickets(
             FanZone = uiState.fanAvailable,
@@ -129,5 +131,7 @@ class TicketViewModel(
 
             money = AppConstants.balance
         )
+
+        return true
     }
 }

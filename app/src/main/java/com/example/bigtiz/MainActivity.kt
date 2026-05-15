@@ -12,6 +12,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import com.example.bigtiz.ui.screen.pilot_details.presentation.PilotDetailsScreen
+import com.example.bigtiz.ui.screen.purchase_success.ViewModel.PurchaseSuccessViewModel
+import com.example.bigtiz.ui.screen.purchase_success.screen.PurchaseSuccessScreen
 import com.example.bigtiz.ui.screen.race_info.presentation.route.RaceInfoRoute
 import com.example.bigtiz.ui.screen.schedule_of_races.ScheduleOfRacesScreen
 import com.example.bigtiz.ui.screen.schedule_of_races.data.ScheduleOfRacesRepositoryImpl
@@ -48,9 +50,12 @@ class MainActivity : ComponentActivity() {
 
         val repositorySchedule = ScheduleOfRacesRepositoryImpl()
         val getRacesUseCase = GetRacesUseCase(repositorySchedule)
-        val factory = ScheduleOfRacesViewModelFactory(getRacesUseCase)
-        val scheduleOfRacesViewModel = ViewModelProvider(this, factory).get(ScheduleOfRacesViewModel::class.java)
 
+        val factory = ScheduleOfRacesViewModelFactory(getRacesUseCase)
+
+        val scheduleOfRacesViewModel =
+            ViewModelProvider(this, factory)
+                .get(ScheduleOfRacesViewModel::class.java)
 
         val repository = TicketRepositoryImpl(dataFile)
 
@@ -61,6 +66,8 @@ class MainActivity : ComponentActivity() {
             purchaseUseCase = purchaseTicketsUseCase
         )
 
+        val purchaseSuccessViewModel = PurchaseSuccessViewModel()
+
         enableEdgeToEdge()
 
         setContent {
@@ -68,18 +75,20 @@ class MainActivity : ComponentActivity() {
             val scope = rememberCoroutineScope()
 
             val pagerState = rememberPagerState(
-                pageCount = { 4 }
+                pageCount = { 5 }
             )
 
             HorizontalPager(
                 state = pagerState,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+
+                userScrollEnabled = pagerState.currentPage != 3
+
             ) { page ->
 
                 when (page) {
 
                     0 -> {
-
                         PilotDetailsScreen(
                             racerId = 1,
 
@@ -92,7 +101,6 @@ class MainActivity : ComponentActivity() {
                     }
 
                     1 -> {
-
                         RaceInfoRoute(
                             onMenuClick = {
                                 scope.launch {
@@ -109,14 +117,15 @@ class MainActivity : ComponentActivity() {
                     }
 
                     2 -> {
-
                         ScheduleOfRacesScreen(
                             viewModel = scheduleOfRacesViewModel,
+
                             onMenuClick = {
                                 scope.launch {
                                     pagerState.scrollToPage(0)
                                 }
                             },
+
                             onTicketClick = {
                                 scope.launch {
                                     pagerState.scrollToPage(3)
@@ -126,13 +135,33 @@ class MainActivity : ComponentActivity() {
                     }
 
                     3 -> {
-
                         TicketSelectionScreen(
                             viewModel = ticketViewModel,
+
+                            purchaseSuccessViewModel = purchaseSuccessViewModel,
 
                             onClick = {
                                 scope.launch {
                                     pagerState.scrollToPage(0)
+                                }
+                            },
+
+
+                            onPurchaseSuccess = {
+                                scope.launch {
+                                    pagerState.scrollToPage(4)
+                                }
+                            }
+                        )
+                    }
+
+                    4 -> {
+                        PurchaseSuccessScreen(
+                            viewModel = purchaseSuccessViewModel,
+
+                            onBackClick = {
+                                scope.launch {
+                                    pagerState.scrollToPage(3)
                                 }
                             }
                         )
