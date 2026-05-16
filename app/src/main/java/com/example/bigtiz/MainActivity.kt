@@ -66,14 +66,14 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             val scope = rememberCoroutineScope()
-
             val pagerState = rememberPagerState(
                 pageCount = { 4 }
             )
 
             HorizontalPager(
                 state = pagerState,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                userScrollEnabled = false
             ) { page ->
 
                 when (page) {
