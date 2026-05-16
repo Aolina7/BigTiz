@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +44,25 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bigtiz.R
 import com.example.bigtiz.ui.common.Header
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.animateContentSize
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.composed
+import androidx.compose.ui.draw.scale
+import kotlinx.coroutines.delay
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+
+
 
 private val gradientList = listOf(Color.Gray, Color.Gray, Color.White)
 
@@ -120,7 +140,19 @@ fun PilotDetailsScreen(
             }
         }
 
-        if (uiState.isMenuVisible) {
+        AnimatedVisibility(
+            visible = uiState.isMenuVisible,
+            enter = fadeIn(animationSpec = tween(300)) +
+                    slideInHorizontally(
+                        initialOffsetX = { -it },
+                        animationSpec = tween(300)
+                    ),
+            exit = fadeOut(animationSpec = tween(300)) +
+                    slideOutHorizontally(
+                        targetOffsetX = { -it },
+                        animationSpec = tween(300)
+                    )
+        ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -138,6 +170,8 @@ fun PilotDetailsScreen(
     }
 }
 
+
+
 @Composable
 private fun RacerBio(racer: RacerUiModel) {
     Column(
@@ -145,7 +179,7 @@ private fun RacerBio(racer: RacerUiModel) {
     ) {
         Text(
             text = racer.fullName,
-            fontSize = 20.sp,
+            fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White
         )
@@ -156,7 +190,7 @@ private fun RacerBio(racer: RacerUiModel) {
             Text(
                 text = racer.country,
                 fontSize = 16.sp,
-                color = Color.Red.copy(alpha = 0.7f)
+                color = Color.Green.copy(alpha = 0.7f)
             )
             Text(
                 text = "•",
@@ -182,7 +216,7 @@ private fun RacerBio(racer: RacerUiModel) {
 
         Text(
             text = racer.formattedQuote,
-            fontSize = 18.sp,
+            fontSize = 16.sp,
             fontStyle = FontStyle.Italic,
             color = Color.White.copy(alpha = 0.9f),
             modifier = Modifier.padding(vertical = 8.dp)
@@ -190,7 +224,7 @@ private fun RacerBio(racer: RacerUiModel) {
 
         Text(
             text = racer.bio,
-            fontSize = 16.sp,
+            fontSize = 14.sp,
             color = Color.White,
             lineHeight = 20.sp
         )
@@ -223,8 +257,6 @@ private fun PhotoAndDescription(racer: RacerUiModel) {
             RacerImage(racer)
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -249,7 +281,7 @@ private fun PhotoAndDescription(racer: RacerUiModel) {
                 ) {
                     Text(
                         text = racer.name,
-                        fontSize = 30.sp,
+                        fontSize = 26.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
                         style = TextStyle(
@@ -294,9 +326,28 @@ private fun PhotoAsButton(
     racer: RacerUiModel,
     onClick: () -> Unit
 ) {
+    var isPressed by remember { mutableStateOf(false) }
+
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.95f else 1f,
+        animationSpec = tween(100),
+        label = "scale"
+    )
+
+    val alpha by animateFloatAsState(
+        targetValue = if (isPressed) 0.7f else 1f,
+        animationSpec = tween(100),
+        label = "alpha"
+    )
+
     Button(
-        onClick = onClick,
-        modifier = Modifier.size(160.dp),
+        onClick = {
+            isPressed = true
+            onClick()
+        },
+        modifier = Modifier
+            .size(160.dp)
+            .scale(scale),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
             contentColor = Color.White
@@ -304,7 +355,25 @@ private fun PhotoAsButton(
         contentPadding = PaddingValues(0.dp),
         shape = RoundedCornerShape(50.dp)
     ) {
-        RacerImage(racer)
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            RacerImage(racer)
+            if (isPressed) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.3f))
+                )
+            }
+        }
+    }
+
+    LaunchedEffect(isPressed) {
+        if (isPressed) {
+            delay(150)
+            isPressed = false
+        }
     }
 }
 
@@ -312,41 +381,72 @@ private fun PhotoAsButton(
 private fun ButtonGoHome(
     onNavigateToHome: () -> Unit
 ) {
+    var isPressed by remember { mutableStateOf(false) }
+
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.95f else 1f,
+        animationSpec = tween(100),
+        label = "scale"
+    )
+
     Button(
-        onClick = onNavigateToHome,
+        onClick = {
+            isPressed = true
+            onNavigateToHome()
+        },
         modifier = Modifier
             .clip(RoundedCornerShape(50.dp))
             .height(40.dp)
-            .width(160.dp),
+            .width(160.dp)
+            .scale(scale),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.LightGray.copy(alpha = 0.2f),
         ),
         contentPadding = PaddingValues(0.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically
+        Box(
+            modifier = Modifier.fillMaxSize()
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.navigation_menu_home),
-                contentDescription = "кнопка на главную",
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(40.dp),
-                contentScale = ContentScale.Crop
-            )
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.navigation_menu_home),
+                    contentDescription = "кнопка на главную",
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(40.dp),
+                    contentScale = ContentScale.Crop
+                )
 
-            Text(
-                text = "вернуться на главную",
-                fontSize = 13.sp,
-                lineHeight = 13.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.LightGray,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp),
-                textAlign = TextAlign.Center
-            )
+                Text(
+                    text = "вернуться на главную",
+                    fontSize = 13.sp,
+                    lineHeight = 13.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.LightGray,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 4.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            if (isPressed) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.3f))
+                )
+            }
+        }
+    }
+
+    LaunchedEffect(isPressed) {
+        if (isPressed) {
+            delay(150)
+            isPressed = false
         }
     }
 }
@@ -362,7 +462,7 @@ private fun NavigationMenu(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 20.dp, top = 80.dp),
+            .padding(start = 12.dp, top = 40.dp),
     ) {
         Box(
             modifier = Modifier
