@@ -43,6 +43,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bigtiz.R
 import com.example.bigtiz.ui.common.Header
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+
+
+
+
+
 
 private val gradientList = listOf(Color.Gray, Color.Gray, Color.White)
 
@@ -120,7 +131,19 @@ fun PilotDetailsScreen(
             }
         }
 
-        if (uiState.isMenuVisible) {
+        AnimatedVisibility(
+            visible = uiState.isMenuVisible,
+            enter = fadeIn(animationSpec = tween(300)) +
+                    slideInHorizontally(
+                        initialOffsetX = { -it },
+                        animationSpec = tween(300)
+                    ),
+            exit = fadeOut(animationSpec = tween(300)) +
+                    slideOutHorizontally(
+                        targetOffsetX = { -it },
+                        animationSpec = tween(300)
+                    )
+        ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -137,6 +160,7 @@ fun PilotDetailsScreen(
         }
     }
 }
+
 
 @Composable
 private fun RacerBio(racer: RacerUiModel) {
