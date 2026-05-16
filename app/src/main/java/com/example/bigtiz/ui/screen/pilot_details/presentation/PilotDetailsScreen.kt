@@ -360,7 +360,7 @@ private fun NavigationMenu(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 20.dp, top = 80.dp),
+            .padding(start = 12.dp, top = 40.dp),
     ) {
         Box(
             modifier = Modifier
