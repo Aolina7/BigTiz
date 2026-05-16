@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,11 +48,19 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-
-
-
+import androidx.compose.animation.animateContentSize
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.composed
+import androidx.compose.ui.draw.scale
+import kotlinx.coroutines.delay
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 
 
 
@@ -160,6 +169,7 @@ fun PilotDetailsScreen(
         }
     }
 }
+
 
 
 @Composable
@@ -316,9 +326,28 @@ private fun PhotoAsButton(
     racer: RacerUiModel,
     onClick: () -> Unit
 ) {
+    var isPressed by remember { mutableStateOf(false) }
+
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.95f else 1f,
+        animationSpec = tween(100),
+        label = "scale"
+    )
+
+    val alpha by animateFloatAsState(
+        targetValue = if (isPressed) 0.7f else 1f,
+        animationSpec = tween(100),
+        label = "alpha"
+    )
+
     Button(
-        onClick = onClick,
-        modifier = Modifier.size(160.dp),
+        onClick = {
+            isPressed = true
+            onClick()
+        },
+        modifier = Modifier
+            .size(160.dp)
+            .scale(scale),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
             contentColor = Color.White
@@ -326,7 +355,25 @@ private fun PhotoAsButton(
         contentPadding = PaddingValues(0.dp),
         shape = RoundedCornerShape(50.dp)
     ) {
-        RacerImage(racer)
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            RacerImage(racer)
+            if (isPressed) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.3f))
+                )
+            }
+        }
+    }
+
+    LaunchedEffect(isPressed) {
+        if (isPressed) {
+            delay(150)
+            isPressed = false
+        }
     }
 }
 
@@ -334,41 +381,72 @@ private fun PhotoAsButton(
 private fun ButtonGoHome(
     onNavigateToHome: () -> Unit
 ) {
+    var isPressed by remember { mutableStateOf(false) }
+
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.95f else 1f,
+        animationSpec = tween(100),
+        label = "scale"
+    )
+
     Button(
-        onClick = onNavigateToHome,
+        onClick = {
+            isPressed = true
+            onNavigateToHome()
+        },
         modifier = Modifier
             .clip(RoundedCornerShape(50.dp))
             .height(40.dp)
-            .width(160.dp),
+            .width(160.dp)
+            .scale(scale),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.LightGray.copy(alpha = 0.2f),
         ),
         contentPadding = PaddingValues(0.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically
+        Box(
+            modifier = Modifier.fillMaxSize()
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.navigation_menu_home),
-                contentDescription = "кнопка на главную",
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(40.dp),
-                contentScale = ContentScale.Crop
-            )
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.navigation_menu_home),
+                    contentDescription = "кнопка на главную",
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(40.dp),
+                    contentScale = ContentScale.Crop
+                )
 
-            Text(
-                text = "вернуться на главную",
-                fontSize = 13.sp,
-                lineHeight = 13.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.LightGray,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp),
-                textAlign = TextAlign.Center
-            )
+                Text(
+                    text = "вернуться на главную",
+                    fontSize = 13.sp,
+                    lineHeight = 13.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.LightGray,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 4.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            if (isPressed) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.3f))
+                )
+            }
+        }
+    }
+
+    LaunchedEffect(isPressed) {
+        if (isPressed) {
+            delay(150)
+            isPressed = false
         }
     }
 }
