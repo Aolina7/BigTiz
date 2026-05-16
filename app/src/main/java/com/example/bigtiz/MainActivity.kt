@@ -1,5 +1,6 @@
 package com.example.bigtiz
 
+import ScheduleOfRacesScreen
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -8,14 +9,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import com.example.bigtiz.ui.screen.pilot_details.presentation.PilotDetailsScreen
 import com.example.bigtiz.ui.screen.purchase_success.ViewModel.PurchaseSuccessViewModel
 import com.example.bigtiz.ui.screen.purchase_success.screen.PurchaseSuccessScreen
 import com.example.bigtiz.ui.screen.race_info.presentation.route.RaceInfoRoute
-import com.example.bigtiz.ui.screen.schedule_of_races.ScheduleOfRacesScreen
 import com.example.bigtiz.ui.screen.schedule_of_races.data.ScheduleOfRacesRepositoryImpl
 import com.example.bigtiz.ui.screen.schedule_of_races.domain.usecase.GetRacesUseCase
 import com.example.bigtiz.ui.screen.schedule_of_races.presentation.viewmodel.ScheduleOfRacesViewModel
@@ -49,6 +49,7 @@ class MainActivity : ComponentActivity() {
         }
 
         val repositorySchedule = ScheduleOfRacesRepositoryImpl()
+
         val getRacesUseCase = GetRacesUseCase(repositorySchedule)
 
         val factory = ScheduleOfRacesViewModelFactory(getRacesUseCase)
@@ -78,17 +79,22 @@ class MainActivity : ComponentActivity() {
                 pageCount = { 5 }
             )
 
+            var selectedPlace by remember {
+                mutableStateOf("Australia")
+            }
+
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize(),
 
-                userScrollEnabled = pagerState.currentPage != 3
+                userScrollEnabled = pagerState.currentPage < 1 || (pagerState.currentPage == 1 && pagerState.targetPage == 0)
 
             ) { page ->
 
                 when (page) {
 
                     0 -> {
+
                         PilotDetailsScreen(
                             racerId = 1,
 
@@ -101,7 +107,9 @@ class MainActivity : ComponentActivity() {
                     }
 
                     1 -> {
+
                         RaceInfoRoute(
+
                             onMenuClick = {
                                 scope.launch {
                                     pagerState.scrollToPage(0)
@@ -117,6 +125,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     2 -> {
+
                         ScheduleOfRacesScreen(
                             viewModel = scheduleOfRacesViewModel,
 
@@ -126,7 +135,10 @@ class MainActivity : ComponentActivity() {
                                 }
                             },
 
-                            onTicketClick = {
+                            onTicketClick = { place ->
+
+                                selectedPlace = place
+
                                 scope.launch {
                                     pagerState.scrollToPage(3)
                                 }
@@ -135,8 +147,11 @@ class MainActivity : ComponentActivity() {
                     }
 
                     3 -> {
+
                         TicketSelectionScreen(
                             viewModel = ticketViewModel,
+
+                            selectedPlace = selectedPlace,
 
                             purchaseSuccessViewModel = purchaseSuccessViewModel,
 
@@ -145,7 +160,6 @@ class MainActivity : ComponentActivity() {
                                     pagerState.scrollToPage(0)
                                 }
                             },
-
 
                             onPurchaseSuccess = {
                                 scope.launch {
@@ -156,6 +170,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     4 -> {
+
                         PurchaseSuccessScreen(
                             viewModel = purchaseSuccessViewModel,
 
@@ -171,3 +186,4 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+

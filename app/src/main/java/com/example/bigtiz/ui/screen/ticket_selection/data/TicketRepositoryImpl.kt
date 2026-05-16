@@ -5,7 +5,6 @@ import com.example.bigtiz.ui.screen.ticket_selection.domain.Tickets
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
-
 class TicketRepositoryImpl(
     private val file: File
 ) : TicketRepository {

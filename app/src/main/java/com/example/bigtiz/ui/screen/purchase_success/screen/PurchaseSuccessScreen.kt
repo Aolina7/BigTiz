@@ -90,7 +90,7 @@ fun PurchaseSuccessScreen(
                         )
 
                         Text(
-                            text = "Purchase Successful!",
+                            text = "Покупка успешна",
                             fontSize = 30.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White,
@@ -98,7 +98,7 @@ fun PurchaseSuccessScreen(
                         )
 
                         Text(
-                            text = "Tickets bought: ${info.totalTickets}",
+                            text = "Билетов куплено: ${info.totalTickets}",
                             fontSize = 24.sp,
                             color = Color.White
                         )
@@ -122,7 +122,7 @@ fun PurchaseSuccessScreen(
                         )
 
                         Text(
-                            text = "Total Paid: ${info.totalPaid} ₽",
+                            text = "Цена: ${info.totalPaid} ₽",
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.Green

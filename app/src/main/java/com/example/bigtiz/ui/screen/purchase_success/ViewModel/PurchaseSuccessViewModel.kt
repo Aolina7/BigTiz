@@ -1,7 +1,6 @@
 package com.example.bigtiz.ui.screen.purchase_success.ViewModel
 
 
-
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,7 +10,7 @@ import com.example.bigtiz.ui.screen.purchase_success.presentation.PurchaseSucces
 
 class PurchaseSuccessViewModel : ViewModel() {
 
-    var uiState by mutableStateOf(PurchaseSuccessUiState())
+    public var uiState by mutableStateOf(PurchaseSuccessUiState())
         private set
 
     fun setPurchaseInfo(
