@@ -145,7 +145,7 @@ private fun RacerBio(racer: RacerUiModel) {
     ) {
         Text(
             text = racer.fullName,
-            fontSize = 20.sp,
+            fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White
         )
@@ -156,7 +156,7 @@ private fun RacerBio(racer: RacerUiModel) {
             Text(
                 text = racer.country,
                 fontSize = 16.sp,
-                color = Color.Red.copy(alpha = 0.7f)
+                color = Color.Green.copy(alpha = 0.7f)
             )
             Text(
                 text = "•",
@@ -182,7 +182,7 @@ private fun RacerBio(racer: RacerUiModel) {
 
         Text(
             text = racer.formattedQuote,
-            fontSize = 18.sp,
+            fontSize = 16.sp,
             fontStyle = FontStyle.Italic,
             color = Color.White.copy(alpha = 0.9f),
             modifier = Modifier.padding(vertical = 8.dp)
@@ -190,7 +190,7 @@ private fun RacerBio(racer: RacerUiModel) {
 
         Text(
             text = racer.bio,
-            fontSize = 16.sp,
+            fontSize = 14.sp,
             color = Color.White,
             lineHeight = 20.sp
         )
@@ -223,8 +223,6 @@ private fun PhotoAndDescription(racer: RacerUiModel) {
             RacerImage(racer)
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -249,7 +247,7 @@ private fun PhotoAndDescription(racer: RacerUiModel) {
                 ) {
                     Text(
                         text = racer.name,
-                        fontSize = 30.sp,
+                        fontSize = 26.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
                         style = TextStyle(
