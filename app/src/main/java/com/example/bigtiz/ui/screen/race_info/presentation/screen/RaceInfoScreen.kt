@@ -66,7 +66,7 @@ fun RaceInfoScreen(
                 Text(
                     text = "Ошибка: ${uiState.message}",
                     color = Color.Red,
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     textAlign = TextAlign.Center
                 )
             }
@@ -145,7 +145,7 @@ private fun BuyTicketButton(onClick: () -> Unit) {
     ) {
         Text(
             text = "КУПИТЬ БИЛЕТ",
-            fontSize = 26.sp,
+            fontSize = 22.sp,
             fontWeight = FontWeight.Black,
             textAlign = TextAlign.Center,
         )
@@ -200,15 +200,15 @@ private fun ResultsDataRow(row: RaceResultRowUiModel) {
         Text(
             text = row.pilotName,
             color = Color.White,
-            fontSize = 14.sp,
+            fontSize = 12.sp,
             modifier = Modifier.weight(1f),
             fontWeight = FontWeight.SemiBold,
         )
 
         Text(
             text = row.timeDelta,
-            color = Color(0xFFA9FF9A),
-            fontSize = 13.sp,
+            color = Color.Green.copy(alpha = 0.7f),
+            fontSize = 11.sp,
             modifier = Modifier.width(86.dp),
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.SemiBold,
@@ -217,7 +217,7 @@ private fun ResultsDataRow(row: RaceResultRowUiModel) {
         Text(
             text = row.points.toString(),
             color = Color.White,
-            fontSize = 14.sp,
+            fontSize = 12.sp,
             modifier = Modifier.width(52.dp),
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
