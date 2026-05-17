@@ -32,23 +32,30 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bigtiz.R
 import com.example.bigtiz.ui.common.HamburgerMenuButton
+import com.example.bigtiz.ui.screen.purchase_success.ViewModel.PurchaseSuccessViewModel
 import com.example.bigtiz.ui.screen.ticket_selection.domain.TicketPrices
 import com.example.bigtiz.ui.screen.ticket_selection.presentation.TicketViewModel
 
 @Composable
 fun TicketSelectionScreen(
     viewModel: TicketViewModel,
-    onClick: () -> Unit
+    selectedPlace: String,
+    onClick: () -> Unit,
+    purchaseSuccessViewModel: PurchaseSuccessViewModel,
+    onPurchaseSuccess: () -> Unit
 ) {
 
     val state = viewModel.uiState
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
 
         DrawSurface()
 
@@ -66,10 +73,14 @@ fun TicketSelectionScreen(
                     onClick = onClick
                 )
 
-                DrawOvalBelowUpper()
+                DrawOvalBelowUpper(
+                    place = selectedPlace
+                )
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(
+                modifier = Modifier.height(20.dp)
+            )
 
             Column(
                 modifier = Modifier.padding(vertical = 20.dp),
@@ -90,7 +101,7 @@ fun TicketSelectionScreen(
                 )
 
                 DrawZone(
-                    title = "Vip Zone",
+                    title = "VIP Zone",
                     ticketsLeft = state.vipAvailable,
                     price = TicketPrices.VIP,
                     selectedValue = state.vipSelected,
@@ -116,12 +127,14 @@ fun TicketSelectionScreen(
                 )
             }
 
-            DrawTotal(viewModel.total)
+            DrawTotal(
+                total = viewModel.total
+            )
 
             DrawPayButton(
-                onPurchase = {
-                    viewModel.purchase()
-                }
+                viewModel = viewModel,
+                purchaseSuccessViewModel = purchaseSuccessViewModel,
+                onPurchaseSuccess = onPurchaseSuccess
             )
         }
     }
@@ -137,7 +150,8 @@ private fun DrawSurface() {
         Image(
             painter = painterResource(id = R.drawable.wp6),
             contentDescription = null,
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
         )
     }
 }
@@ -231,7 +245,9 @@ private fun MoneyIcon(
 }
 
 @Composable
-private fun DrawOvalBelowUpper() {
+private fun DrawOvalBelowUpper(
+    place: String
+) {
 
     Box(
         modifier = Modifier
@@ -242,11 +258,14 @@ private fun DrawOvalBelowUpper() {
     ) {
 
         Text(
-            text = "Australia???",
+            text = place,
+
             fontSize = 20.sp,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
 
             modifier = Modifier
-                .align(Alignment.CenterStart)
+                .align(Alignment.Center)
                 .padding(horizontal = 20.dp)
         )
     }
@@ -299,11 +318,11 @@ private fun DrawZone(
                     )
 
                     Text(
-                        text = "$ticketsLeft tickets left",
+                        text = "$ticketsLeft билетов осталось",
 
                         modifier = Modifier.padding(horizontal = 10.dp),
 
-                        fontSize = 20.sp,
+                        fontSize = 15.sp,
                         color = Color.Red
                     )
                 }
@@ -400,8 +419,12 @@ private fun DrawZone(
 
 @Composable
 private fun DrawPayButton(
-    onPurchase: () -> Unit
+    viewModel: TicketViewModel,
+    purchaseSuccessViewModel: PurchaseSuccessViewModel,
+    onPurchaseSuccess: () -> Unit
 ) {
+
+    val state = viewModel.uiState
 
     Box(
         modifier = Modifier
@@ -419,7 +442,22 @@ private fun DrawPayButton(
         ) {
 
             Button(
-                onClick = onPurchase,
+                onClick = {
+
+                    val success = viewModel.purchase()
+
+                    if (success) {
+
+                        purchaseSuccessViewModel.setPurchaseInfo(
+                            fan = state.fanSelected,
+                            vip = state.vipSelected,
+                            premium = state.premiumSelected,
+                            total = viewModel.total
+                        )
+
+                        onPurchaseSuccess()
+                    }
+                },
 
                 shape = RoundedCornerShape(20),
 
@@ -431,7 +469,7 @@ private fun DrawPayButton(
             ) {
 
                 Text(
-                    text = "Purchase",
+                    text = "Купить",
 
                     fontSize = 30.sp,
                     fontWeight = FontWeight.SemiBold,

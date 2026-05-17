@@ -1,5 +1,4 @@
 package com.example.bigtiz.ui.screen.ticket_selection.domain
-
 class PurchaseTicketsUseCase(
     private val repository: TicketRepository
 ) {

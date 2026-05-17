@@ -10,5 +10,5 @@ data class TicketUiState(
     val vipSelected: Int = 0,
     val premiumSelected: Int = 0,
 
-    val money: Int = 10000
+    val money: Int = 0
 )
